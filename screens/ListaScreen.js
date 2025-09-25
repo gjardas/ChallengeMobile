@@ -1,109 +1,142 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity, Dimensions, Button, Text } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import HeaderCustom from '../components/HeaderCustom';
+import { getMotos, deleteMoto } from '../services/ApiService';
 
-const CARD_WIDTH = 250;
+export default function ListaScreen() {
+  const navigation = useNavigation();
+  const [motos, setMotos] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-export default function ListaScreen({ navigation }) {
-  const [motos, setMotos] = useState([]);
+  const carregarMotos = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getMotos();
+      setMotos(data);
+    } catch (error) {
+      console.error('Falha ao carregar motos:', error);
+      Alert.alert('Erro', 'Não foi possível carregar a lista de motos.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  useEffect(() => {
-    const carregar = async () => {
-      const data = await AsyncStorage.getItem('motos');
-      if (data) setMotos(JSON.parse(data));
-    };
-    carregar();
-  }, []);
+  const excluirMoto = async (placa) => {
+    try {
+      await deleteMoto(placa);
+      Alert.alert('Sucesso', 'Moto excluída com sucesso.');
+      carregarMotos();
+    } catch (error) {
+      console.error('Falha ao excluir a moto:', error);
+      Alert.alert('Erro', 'Não foi possível excluir a moto.');
+    }
+  };
 
-  const excluir = async (placa) => {
-    const novas = motos.filter(moto => moto.placa !== placa);
-    await AsyncStorage.setItem('motos', JSON.stringify(novas));
-    setMotos(novas);
-  };
+  const confirmarExclusao = (placa) => {
+    Alert.alert(
+      'Confirmação',
+      `Tem certeza que deseja excluir a moto com a placa ${placa}?`,
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Excluir',
+          onPress: () => excluirMoto(placa),
+          style: 'destructive',
+        },
+      ]
+    );
+  };
 
-  // Array com as vagas ocupadas
-  const vagasOcupadas = motos.map(moto => String(moto.vaga));
+  useFocusEffect(
+    React.useCallback(() => {
+      carregarMotos();
+      return () => {
+      };
+    }, [])
+  );
 
-  return (
-    <View style={styles.container}>
+  const renderItem = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <View style={styles.itemTextContainer}>
+        <Text style={styles.itemTitle}>Placa: {item.placa}</Text>
+        <Text style={styles.itemSubtitle}>Vaga: {item.vaga}</Text>
+        <Text style={styles.itemSubtitle}>RFID: {item.rfid}</Text>
+      </View>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => confirmarExclusao(item.placa)}
+      >
+        <Ionicons name="trash-outline" size={24} color="#fff" />
+      </TouchableOpacity>
+    </View>
+  );
 
-      <HeaderCustom navigation={navigation} title="Lista" />
-
-      <Button
-        title="Ver Mapa de Vagas"
-        onPress={() => navigation.navigate('Mapa', { ocupadasVagas: vagasOcupadas })}
-        color="#00cc44"
-      />
-
-      <FlatList
-        data={motos}
-        keyExtractor={(item) => item.placa}
-        numColumns={Math.floor(Dimensions.get('window').width / (CARD_WIDTH + 16))}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.text}>Placa: {item.placa}</Text>
-            <Text style={styles.text}>Vaga: {item.vaga}</Text>
-            <Text style={styles.text}>RFID: {item.rfid}</Text>
-            <TouchableOpacity
-              style={styles.buttonExcluir}
-              onPress={() => excluir(item.placa)}
-            >
-              <Text style={styles.textExcluir}>Excluir</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
-    </View>
-  );
+  return (
+    <View style={{ flex: 1, backgroundColor: '#1e1e1e' }}>
+      <HeaderCustom navigation={navigation} title="Lista de Motos" />
+      <View style={styles.container}>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#00ff7f" />
+        ) : (
+          <FlatList
+            data={motos}
+            keyExtractor={(item) => item.placa}
+            renderItem={renderItem}
+            contentContainerStyle={motos.length === 0 && styles.noMotosContainer}
+            ListEmptyComponent={() => (
+              <Text style={styles.noMotosText}>Nenhuma moto cadastrada.</Text>
+            )}
+          />
+        )}
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1e1e1e',
-  },
-
-  listContent: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-  },
-
-  card: {
-    width: CARD_WIDTH,
-    maxHeight: 180,
-    borderWidth: 1,
-    borderColor: '#00ff7f',
-    backgroundColor: '#2a2a2a',
-    padding: 12,
-    margin: 8,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  text: {
-    color: '#d0f0c0',
-    fontSize: 16,
-    marginVertical: 6,
-    textAlign: 'center',
-  },
-
-  buttonExcluir: {
-    marginTop: 15,
-    backgroundColor: '#ff4d4d',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-
-  textExcluir: {
-    color: '#1e1e1e',
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 8,
+    backgroundColor: '#2a2a2a',
+  },
+  itemTextContainer: {
+    flex: 1,
+  },
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  itemSubtitle: {
+    fontSize: 14,
+    color: '#ccc',
+  },
+  deleteButton: {
+    backgroundColor: '#d9534f',
+    padding: 10,
+    borderRadius: 5,
+  },
+  noMotosContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noMotosText: {
+    color: '#ccc',
+    fontSize: 16,
+    textAlign: 'center',
+  },
 });

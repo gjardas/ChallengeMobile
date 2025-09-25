@@ -29,7 +29,6 @@ export const createMoto = async (motoData) => {
   }
 };
 
-// Deletar moto por ID
 export const deleteMoto = async (id) => {
   try {
     await api.delete(`/${id}`);
@@ -39,7 +38,6 @@ export const deleteMoto = async (id) => {
   }
 };
 
-// Atualizar moto por ID
 export const updateMoto = async (id, motoData) => {
   try {
     const response = await api.put(`/${id}`, motoData);
