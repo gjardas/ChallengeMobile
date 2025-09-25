@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function HeaderCustom({ navigation }) {
   const [menuVisible, setMenuVisible] = useState(false);
+  // O hook useSafeAreaInsets deve ser chamado dentro do componente
+  const insets = useSafeAreaInsets();
 
   const toggleMenu = () => setMenuVisible(!menuVisible);
 
@@ -14,7 +17,8 @@ export default function HeaderCustom({ navigation }) {
   const canGoBack = navigation.canGoBack();
 
   return (
-    <View style={styles.headerContainer}>
+    // Aplica o paddingTop diretamente no estilo do componente
+    <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
       <View style={styles.topBar}>
         {canGoBack ? (
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -59,6 +63,7 @@ export default function HeaderCustom({ navigation }) {
 
 const styles = StyleSheet.create({
   headerContainer: {
+    // Remove o paddingTop daqui
     backgroundColor: '#1e1e1e',
     borderBottomWidth: 1,
     borderBottomColor: '#00ff7f',
