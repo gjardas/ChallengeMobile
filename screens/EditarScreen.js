@@ -8,65 +8,54 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import HeaderCustom from "../components/HeaderCustom";
-import { createMoto } from "../services/ApiService";
+import { updateMoto } from "../services/ApiService";
 
-export default function CadastroScreen() {
+export default function EditarScreen() {
   const navigation = useNavigation();
+  const route = useRoute();
   const [placa, setPlaca] = useState("");
   const [vaga, setVaga] = useState("");
-  const [rfid, setRfid] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [erro, setErro] = useState("");
 
-  const placaValida = (placa) => {
-    const antiga = /^[A-Z]{3}[0-9]{4}$/i;
-    const mercosul = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/i;
-    return antiga.test(placa) || mercosul.test(placa);
-  };
+  const originalPlaca = route.params?.moto.placa;
 
-  const salvar = async () => {
-    if (!placa.trim()) {
-      setErro("Informe a placa da moto");
+  useEffect(() => {
+    if (route.params?.moto) {
+      const { moto } = route.params;
+      setPlaca(moto.placa);
+      setVaga(moto.vaga);
+    }
+  }, [route.params]);
+
+  const salvarEdicao = async () => {
+    if (!placa.trim() || !vaga.trim()) {
+      setErro("Placa e Vaga são obrigatórios.");
       return;
     }
 
-    if (!placaValida(placa)) {
-      setErro("Placa inválida (formato: ABC1234 ou ABC1D23)");
-      return;
-    }
-
-    setErro("");
     setIsLoading(true);
-
     try {
-      const novaMotoData = { placa: placa.toUpperCase() };
-      const response = await createMoto(novaMotoData);
-      setPlaca("");
-      setVaga(response.vaga);
-      setRfid(response.rfid);
-      Alert.alert("Sucesso", "Moto cadastrada com sucesso!");
+      const motoAtualizada = { placa: placa.toUpperCase(), vaga };
+      await updateMoto(originalPlaca, motoAtualizada);
+      Alert.alert("Sucesso", "Moto atualizada com sucesso!");
+      navigation.goBack();
     } catch (error) {
-      console.error("Falha ao salvar moto:", error);
-      setErro(error.response?.data?.message || "Erro ao cadastrar a moto.");
+      console.error("Falha ao atualizar moto:", error);
+      setErro(error.response?.data?.message || "Erro ao atualizar a moto.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const voltarHome = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Início" }],
-    });
-  };
-
   return (
     <View style={styles.screenContainer}>
-      <HeaderCustom navigation={navigation} />
+            <HeaderCustom navigation={navigation} title="Editar Moto" />     {" "}
       <View style={styles.container}>
-        <Text style={styles.title}>Cadastro de Moto</Text>
+                <Text style={styles.title}>Editar Moto</Text>
+               {" "}
         <TextInput
           placeholder="Placa"
           style={styles.input}
@@ -76,31 +65,33 @@ export default function CadastroScreen() {
           autoCapitalize="characters"
           maxLength={7}
         />
-        {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
+               {" "}
+        <TextInput
+          placeholder="Vaga"
+          style={styles.input}
+          value={vaga}
+          onChangeText={setVaga}
+          placeholderTextColor="#7f7f7f"
+          keyboardType="numeric"
+        />
+                {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}   
+           {" "}
         <TouchableOpacity
           style={styles.button}
-          onPress={salvar}
+          onPress={salvarEdicao}
           disabled={isLoading}
         >
+                   {" "}
           {isLoading ? (
             <ActivityIndicator size="small" color="#1e1e1e" />
           ) : (
-            <Text style={styles.buttonText}>Salvar</Text>
+            <Text style={styles.buttonText}>Salvar Edição</Text>
           )}
+                 {" "}
         </TouchableOpacity>
-        {vaga !== "" && rfid !== "" && (
-          <View style={styles.infoBox}>
-            <Text style={styles.infoText}>
-              {"✅ Moto cadastrada na vaga "}
-              <Text style={styles.destaque}>{vaga}</Text>
-            </Text>
-            <Text style={styles.infoText}>
-              {"RFID gerado: "}
-              <Text style={styles.destaque}>{rfid}</Text>
-            </Text>
-          </View>
-        )}
+             {" "}
       </View>
+         {" "}
     </View>
   );
 }
@@ -152,18 +143,5 @@ const styles = StyleSheet.create({
     color: "#1e1e1e",
     fontWeight: "bold",
     fontSize: 18,
-  },
-  infoBox: {
-    marginTop: 25,
-    alignItems: "center",
-  },
-  infoText: {
-    color: "#d0f0c0",
-    fontSize: 16,
-    marginVertical: 3,
-  },
-  destaque: {
-    color: "#00ff7f",
-    fontWeight: "bold",
   },
 });
