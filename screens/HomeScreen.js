@@ -1,3 +1,4 @@
+// screens/HomeScreen.js
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import HeaderCustom from '../components/HeaderCustom';
@@ -5,12 +6,12 @@ import HeaderCustom from '../components/HeaderCustom';
 export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.screenContainer}>
+      <HeaderCustom title="MOTTU" />
 
-      <HeaderCustom navigation={navigation} />
+      <View style={styles.contentContainer}>
+        {/* TODO: O título foi movido para dentro do contentContainer */}
+        <Text style={styles.title}>Gestão de Vagas e Motos - Mottu</Text>
 
-            <Text style={styles.title}>Gestão de Vagas e Motos - Mottu</Text>
-
-      <View style={styles.container}>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Cadastro')}>
           <Text style={styles.buttonText}>Cadastrar Moto</Text>
         </TouchableOpacity>
@@ -35,26 +36,19 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingVertical: 20,
     paddingHorizontal: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#00ff7f',
-    marginTop: 40,
-    marginBottom: 10,
+    marginTop: 0,
+    marginBottom: 40,
     textAlign: 'center',
   },
-container: {
-  flexGrow: 1,
-  paddingVertical: 20,
-  paddingHorizontal: 40,
-  alignItems: 'center',
-  justifyContent: 'center',
-},
-
   button: {
     backgroundColor: '#00ff7f',
     paddingVertical: 12,

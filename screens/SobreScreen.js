@@ -5,7 +5,7 @@ import HeaderCustom from '../components/HeaderCustom';
 export default function SobreScreen({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: '#1e1e1e' }}>
-      <HeaderCustom navigation={navigation} title="Sobre" />
+      <HeaderCustom title="Sobre" />
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.integrantes}>Sobre o projeto</Text>

@@ -14,10 +14,9 @@ export default function StackRoutes() {
   return (
     <Stack.Navigator
       initialRouteName="Início"
-      screenOptions={({ navigation, route }) => ({
+      screenOptions={({ route }) => ({
         header: () => (
           <HeaderCustom
-            navigation={navigation}
             title={route.name === "Início" ? "Mottu" : route.name}
           />
         ),

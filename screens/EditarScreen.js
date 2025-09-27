@@ -52,7 +52,7 @@ export default function EditarScreen() {
 
   return (
     <View style={styles.screenContainer}>
-            <HeaderCustom navigation={navigation} title="Editar Moto" />     {" "}
+            <HeaderCustom title="Editar Moto" />     {" "}
       <View style={styles.container}>
                 <Text style={styles.title}>Editar Moto</Text>
                {" "}

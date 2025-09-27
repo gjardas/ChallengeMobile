@@ -38,7 +38,7 @@ export default function MapaScreen({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: '#1e1e1e' }}>
 
-      <HeaderCustom navigation={navigation} title="Mapa" />
+      <HeaderCustom title="Mapa" />
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Mapa de Vagas (Atualizado)</Text>

@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+// components/HeaderCustom.js
+import React, { useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { AuthContext } from '../services/AuthContext';
 
-export default function HeaderCustom({ navigation }) {
+export default function HeaderCustom({ title = "MOTTU" }) {
+  const navigation = useNavigation();
   const [menuVisible, setMenuVisible] = useState(false);
-  // O hook useSafeAreaInsets deve ser chamado dentro do componente
   const insets = useSafeAreaInsets();
-
+  
+  const authContext = useContext(AuthContext); 
+  const { logout, isLoggedIn } = authContext || {}; 
+  
   const toggleMenu = () => setMenuVisible(!menuVisible);
 
   const navigateTo = (screen) => {
@@ -14,10 +20,22 @@ export default function HeaderCustom({ navigation }) {
     navigation.navigate(screen);
   };
 
+  const handleLogout = async () => {
+    setMenuVisible(false);
+    await logout();
+  };
+
   const canGoBack = navigation.canGoBack();
 
+  const menuItems = [
+    { name: 'Início', screen: 'Início' },
+    { name: 'Cadastrar Moto', screen: 'Cadastro' },
+    { name: 'Lista de Motos', screen: 'Lista' },
+    { name: 'Mapa de Vagas', screen: 'Mapa' },
+    { name: 'Sobre', screen: 'Sobre' },
+  ];
+
   return (
-    // Aplica o paddingTop diretamente no estilo do componente
     <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
       <View style={styles.topBar}>
         {canGoBack ? (
@@ -28,11 +46,10 @@ export default function HeaderCustom({ navigation }) {
           <View style={styles.backPlaceholder} />
         )}
 
-        {/* Texto "MOTTU" centralizado */}
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>MOTTU</Text>
+          <Text style={styles.titleText}>{title}</Text>
         </View>
-
+        
         <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
           <Text style={styles.menuButtonText}>☰ Menu</Text>
         </TouchableOpacity>
@@ -40,21 +57,21 @@ export default function HeaderCustom({ navigation }) {
 
       {menuVisible && (
         <View style={styles.sideMenu}>
-          <TouchableOpacity onPress={() => navigateTo('Início')} style={styles.menuItem}>
-            <Text style={styles.menuText}>Início</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('Cadastro')} style={styles.menuItem}>
-            <Text style={styles.menuText}>Cadastrar Moto</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('Lista')} style={styles.menuItem}>
-            <Text style={styles.menuText}>Lista de Motos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('Mapa')} style={styles.menuItem}>
-            <Text style={styles.menuText}>Mapa de Vagas</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateTo('Sobre')} style={styles.menuItem}>
-            <Text style={styles.menuText}>Sobre</Text>
-          </TouchableOpacity>
+          {menuItems.map((item) => (
+            <TouchableOpacity 
+              key={item.screen}
+              onPress={() => navigateTo(item.screen)} 
+              style={styles.menuItem}
+            >
+              <Text style={styles.menuText}>{item.name}</Text>
+            </TouchableOpacity>
+          ))}
+          
+          {isLoggedIn && (
+            <TouchableOpacity key="Logout" onPress={handleLogout} style={styles.menuItem}>
+              <Text style={styles.menuText}>Sair</Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
     </View>
@@ -63,7 +80,6 @@ export default function HeaderCustom({ navigation }) {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    // Remove o paddingTop daqui
     backgroundColor: '#1e1e1e',
     borderBottomWidth: 1,
     borderBottomColor: '#00ff7f',
