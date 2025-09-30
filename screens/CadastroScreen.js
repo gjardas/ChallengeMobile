@@ -15,8 +15,11 @@ import { createMoto } from "../services/ApiService";
 export default function CadastroScreen() {
   const navigation = useNavigation();
   const [placa, setPlaca] = useState("");
+  const [modelo, setModelo] = useState("");
+  const [ano, setAno] = useState("");
+  const [rfidTag, setRfidTag] = useState("");
+  const [status, setStatus] = useState("");
   const [vaga, setVaga] = useState("");
-  const [rfid, setRfid] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -41,11 +44,21 @@ export default function CadastroScreen() {
     setIsLoading(true);
 
     try {
-      const novaMotoData = { placa: placa.toUpperCase() };
+      const novaMotoData = {
+        placa: placa.toUpperCase(),
+        modelo,
+        ano,
+        rfidTag,
+        status,
+        vaga,
+      };
       const response = await createMoto(novaMotoData);
       setPlaca("");
-      setVaga(response.vaga);
-      setRfid(response.rfid);
+      setModelo("");
+      setAno("");
+      setRfidTag("");
+      setStatus("");
+      setVaga("");
       Alert.alert("Sucesso", "Moto cadastrada com sucesso!");
     } catch (error) {
       console.error("Falha ao salvar moto:", error);
@@ -76,6 +89,43 @@ export default function CadastroScreen() {
           autoCapitalize="characters"
           maxLength={7}
         />
+        <TextInput
+          placeholder="Modelo"
+          style={styles.input}
+          value={modelo}
+          onChangeText={setModelo}
+          placeholderTextColor="#7f7f7f"
+        />
+        <TextInput
+          placeholder="Ano"
+          style={styles.input}
+          value={ano}
+          onChangeText={setAno}
+          placeholderTextColor="#7f7f7f"
+          keyboardType="numeric"
+        />
+        <TextInput
+          placeholder="RFID Tag"
+          style={styles.input}
+          value={rfidTag}
+          onChangeText={setRfidTag}
+          placeholderTextColor="#7f7f7f"
+        />
+        <TextInput
+          placeholder="Status"
+          style={styles.input}
+          value={status}
+          onChangeText={setStatus}
+          placeholderTextColor="#7f7f7f"
+        />
+        <TextInput
+          placeholder="Vaga"
+          style={styles.input}
+          value={vaga}
+          onChangeText={setVaga}
+          placeholderTextColor="#7f7f7f"
+          keyboardType="numeric"
+        />
         {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
         <TouchableOpacity
           style={styles.button}
@@ -88,18 +138,7 @@ export default function CadastroScreen() {
             <Text style={styles.buttonText}>Salvar</Text>
           )}
         </TouchableOpacity>
-        {vaga !== "" && rfid !== "" && (
-          <View style={styles.infoBox}>
-            <Text style={styles.infoText}>
-              {"✅ Moto cadastrada na vaga "}
-              <Text style={styles.destaque}>{vaga}</Text>
-            </Text>
-            <Text style={styles.infoText}>
-              {"RFID gerado: "}
-              <Text style={styles.destaque}>{rfid}</Text>
-            </Text>
-          </View>
-        )}
+        {/* Mensagem de sucesso pode ser adaptada conforme retorno do backend */}
       </View>
     </View>
   );

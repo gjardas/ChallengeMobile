@@ -1,27 +1,38 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
-import HeaderCustom from '../components/HeaderCustom';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ScrollView,
+  Dimensions,
+} from "react-native";
+import HeaderCustom from "../components/HeaderCustom";
 
 export default function SobreScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, backgroundColor: '#1e1e1e' }}>
+    <View style={{ flex: 1, backgroundColor: "#1e1e1e" }}>
       <HeaderCustom navigation={navigation} title="Sobre" />
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.integrantes}>Sobre o projeto</Text>
         <Text style={styles.texto}>
-          Este aplicativo foi desenvolvido para oferecer uma solução prática e eficiente para o gerenciamento de vagas de estacionamento de motos, utilizando tecnologia RFID para identificar e controlar os veículos. Através do app, é possível cadastrar motos com seus dados essenciais, visualizar uma lista organizada das motos cadastradas e acompanhar, em tempo real, o mapa das vagas ocupadas no estacionamento.
-          {'\n\n'}
-          O sistema facilita a administração do espaço, permitindo que os responsáveis saibam exatamente quais vagas estão livres ou ocupadas, otimizando a utilização do local e evitando conflitos ou confusões. A interface intuitiva e o uso de armazenamento local garantem que os dados estejam sempre disponíveis, mesmo sem conexão à internet.
-          {'\n\n'}
-          Com foco na segurança e praticidade, este projeto traz uma inovação tecnológica para o controle de acesso e monitoramento de veículos, proporcionando uma experiência mais ágil e confiável tanto para os gestores quanto para os usuários do estacionamento.
+          Este aplicativo foi desenvolvido para oferecer uma solução prática e
+          eficiente para o gerenciamento de vagas de estacionamento de motos,
+          utilizando tecnologia RFID para identificar e controlar os veículos.
+          Através do app, é possível cadastrar motos com seus dados essenciais,
+          visualizar uma lista organizada das motos cadastradas e acompanhar, em
+          tempo real, o mapa das vagas ocupadas no estacionamento.
+          {
+            "\n\nO sistema facilita a administração do espaço, permitindo que os responsáveis saibam exatamente quais vagas estão livres ou ocupadas, otimizando a utilização do local e evitando conflitos ou confusões. A interface intuitiva e o uso de armazenamento local garantem que os dados estejam sempre disponíveis, mesmo sem conexão à internet.\n\nCom foco na segurança e praticidade, este projeto traz uma inovação tecnológica para o controle de acesso e monitoramento de veículos, proporcionando uma experiência mais ágil e confiável tanto para os gestores quanto para os usuários do estacionamento."
+          }
         </Text>
 
         <Text style={styles.title}>Integrantes</Text>
         <View style={styles.imageRow}>
           <View style={styles.imageContainer}>
             <Image
-              source={require('../assets/Guilherme.jpg')}
+              source={require("../assets/Guilherme.jpg")}
               style={styles.image}
               resizeMode="contain"
             />
@@ -30,7 +41,7 @@ export default function SobreScreen({ navigation }) {
 
           <View style={styles.imageContainer}>
             <Image
-              source={require('../assets/Fernando.png')}
+              source={require("../assets/Fernando.png")}
               style={styles.image}
               resizeMode="contain"
             />
@@ -47,28 +58,28 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingVertical: 20,
     paddingHorizontal: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   integrantes: {
     marginTop: 40,
     fontSize: 40,
-    fontWeight: 'bold',
-    color: '#00ff7f',
+    fontWeight: "bold",
+    color: "#00ff7f",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   imageRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     gap: 200,
     marginBottom: 30,
   },
 
   imageContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   image: {
@@ -79,24 +90,24 @@ const styles = StyleSheet.create({
   },
 
   imageCaption: {
-    color: '#00ff7f',
+    color: "#00ff7f",
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    textAlign: 'center',
-    color: '#00ff7f',
+    textAlign: "center",
+    color: "#00ff7f",
   },
 
   texto: {
     fontSize: 16,
     lineHeight: 24,
-    textAlign: 'center',
-    color: '#d0f0c0',
+    textAlign: "center",
+    color: "#d0f0c0",
     marginBottom: 40,
   },
 });

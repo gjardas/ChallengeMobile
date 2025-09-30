@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -21,11 +21,13 @@ export default function ListaScreen() {
   const carregarMotos = async () => {
     setIsLoading(true);
     try {
-      const data = await getMotos();
-      setMotos(data);
+      // getMotos() já retorna o array de motos do .content
+      const data = await getMotos(); // Defesa de Código: Garante que o estado é um array vazio se a API falhar.
+      setMotos(data || []);
     } catch (error) {
       console.error("Falha ao carregar motos:", error);
       Alert.alert("Erro", "Não foi possível carregar a lista de motos.");
+      setMotos([]);
     } finally {
       setIsLoading(false);
     }
@@ -71,8 +73,12 @@ export default function ListaScreen() {
     <View style={styles.itemContainer}>
       <View style={styles.itemTextContainer}>
         <Text style={styles.itemTitle}>Placa: {item.placa}</Text>
-        <Text style={styles.itemSubtitle}>Vaga: {item.vaga}</Text>
-        <Text style={styles.itemSubtitle}>RFID: {item.rfid}</Text>
+        <Text style={styles.itemSubtitle}>Modelo: {item.modelo}</Text>
+        <Text style={styles.itemSubtitle}>Ano: {item.ano}</Text>
+        <Text style={styles.itemSubtitle}>
+          RFID: {item.rfidTag || item.rfid}
+        </Text>
+        <Text style={styles.itemSubtitle}>Status: {item.status || "N/A"}</Text>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -81,7 +87,6 @@ export default function ListaScreen() {
         >
           <Ionicons name="create-outline" size={24} color="#1e1e1e" />
         </TouchableOpacity>
-        {/* Botão de Excluir */}
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={() => confirmarExclusao(item.placa)}
@@ -92,19 +97,26 @@ export default function ListaScreen() {
     </View>
   );
 
+  console.log('Motos recebidas do backend:', motos);
   return (
     <View style={{ flex: 1, backgroundColor: "#1e1e1e" }}>
-      <HeaderCustom navigation={navigation} title="Lista de Motos" />
+      <HeaderCustom title="Lista de Motos" />
       <View style={styles.container}>
         {isLoading ? (
           <ActivityIndicator size="large" color="#00ff7f" />
         ) : (
           <FlatList
-            data={motos}
-            keyExtractor={(item) => item.placa}
+            data={
+              Array.isArray(motos)
+                ? motos.filter((m) => m.placa && m.placa.trim() !== "")
+                : []
+            }
+            keyExtractor={(item, index) =>
+              String(item.placa || item.id || index)
+            }
             renderItem={renderItem}
             contentContainerStyle={
-              motos.length === 0 && styles.noMotosContainer
+              motos.length === 0 ? styles.noMotosContainer : null
             }
             ListEmptyComponent={() => (
               <Text style={styles.noMotosText}>Nenhuma moto cadastrada.</Text>
