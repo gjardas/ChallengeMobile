@@ -16,30 +16,42 @@ export default function EditarScreen() {
   const navigation = useNavigation();
   const route = useRoute();
   const [placa, setPlaca] = useState("");
-  const [vaga, setVaga] = useState("");
+  const [modelo, setModelo] = useState("");
+  const [ano, setAno] = useState("");
+  const [status, setStatus] = useState("");
+  const [observacoes, setObservacoes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [erro, setErro] = useState("");
 
-  const originalPlaca = route.params?.moto.placa;
+  const motoId = route.params?.moto.id;
 
   useEffect(() => {
     if (route.params?.moto) {
       const { moto } = route.params;
       setPlaca(moto.placa);
-      setVaga(moto.vaga);
+      setModelo(moto.modelo || "");
+      setAno(moto.ano ? String(moto.ano) : "");
+      setStatus(moto.status || "");
+      setObservacoes(moto.observacoes || "");
     }
   }, [route.params]);
 
   const salvarEdicao = async () => {
-    if (!placa.trim() || !vaga.trim()) {
-      setErro("Placa e Vaga são obrigatórios.");
+    if (!placa.trim()) {
+      setErro("Informe a placa da moto");
       return;
     }
-
+    setErro("");
     setIsLoading(true);
     try {
-      const motoAtualizada = { placa: placa.toUpperCase(), vaga };
-      await updateMoto(originalPlaca, motoAtualizada);
+      const motoAtualizada = {
+        placa: placa.toUpperCase(),
+        modelo,
+        ano,
+        status,
+        observacoes,
+      };
+      await updateMoto(motoId, motoAtualizada);
       Alert.alert("Sucesso", "Moto atualizada com sucesso!");
       navigation.goBack();
     } catch (error) {
@@ -52,9 +64,9 @@ export default function EditarScreen() {
 
   return (
     <View style={styles.screenContainer}>
-            <HeaderCustom navigation={navigation} title="Editar Moto" />     {" "}
+      <HeaderCustom navigation={navigation} title="Editar Moto" />
       <View style={styles.container}>
-                <Text style={styles.title}>Editar Moto</Text>       {" "}
+        <Text style={styles.title}>Editar Moto</Text>
         <TextInput
           placeholder="Placa"
           style={styles.input}
@@ -64,33 +76,48 @@ export default function EditarScreen() {
           autoCapitalize="characters"
           maxLength={7}
         />
-               {" "}
         <TextInput
-          placeholder="Vaga"
+          placeholder="Modelo"
           style={styles.input}
-          value={vaga}
-          onChangeText={setVaga}
+          value={modelo}
+          onChangeText={setModelo}
+          placeholderTextColor="#7f7f7f"
+        />
+        <TextInput
+          placeholder="Ano"
+          style={styles.input}
+          value={ano}
+          onChangeText={setAno}
           placeholderTextColor="#7f7f7f"
           keyboardType="numeric"
         />
-                {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}   
-           {" "}
+        <TextInput
+          placeholder="Status"
+          style={styles.input}
+          value={status}
+          onChangeText={setStatus}
+          placeholderTextColor="#7f7f7f"
+        />
+        <TextInput
+          placeholder="Observações"
+          style={styles.input}
+          value={observacoes}
+          onChangeText={setObservacoes}
+          placeholderTextColor="#7f7f7f"
+        />
+        {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
         <TouchableOpacity
           style={styles.button}
           onPress={salvarEdicao}
           disabled={isLoading}
         >
-                   {" "}
           {isLoading ? (
             <ActivityIndicator size="small" color="#1e1e1e" />
           ) : (
             <Text style={styles.buttonText}>Salvar Edição</Text>
           )}
-                 {" "}
         </TouchableOpacity>
-             {" "}
       </View>
-         {" "}
     </View>
   );
 }

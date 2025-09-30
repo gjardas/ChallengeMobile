@@ -100,7 +100,7 @@ export default function ListaScreen() {
   console.log("Motos recebidas do backend:", motos);
   return (
     <View style={{ flex: 1, backgroundColor: "#1e1e1e" }}>
-      <HeaderCustom title="Lista de Motos" />
+      <HeaderCustom navigation={navigation} title="Lista de Motos" />
       <View style={styles.container}>
         {isLoading ? (
           <ActivityIndicator size="large" color="#00ff7f" />
