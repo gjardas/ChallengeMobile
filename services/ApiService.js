@@ -1,7 +1,6 @@
-// services/ApiService.js
 import axios from "axios";
 
-const API_URL = "http://10.0.2.2:8080/motos";
+const API_URL = "http://192.168.1.128:8080/";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -10,25 +9,20 @@ const api = axios.create({
   },
 });
 
-// NOVO: Função para injetar o token JWT/Firebase nas requisições
 export const setAuthToken = (token) => {
   if (token) {
-    // Envia o token no formato Bearer (padrão JWT)
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     console.log("Token set for API calls.");
   } else {
-    // Remove o token ao fazer logout
     delete api.defaults.headers.common["Authorization"];
     console.log("Token removed for API calls.");
   }
 };
 
-// O restante das suas funções CRUD permanecem as mesmas
 export const getMotos = async () => {
-  // ... (seu código getMotos)
   try {
-    const response = await api.get("/");
-    return response.data.content; // Retorna só o array de motos
+    const response = await api.get("/motos");
+    return response.data.content;
   } catch (error) {
     console.error(
       "Erro ao buscar motos:",
@@ -39,9 +33,8 @@ export const getMotos = async () => {
 };
 
 export const createMoto = async (motoData) => {
-  // ... (seu código createMoto)
   try {
-    const response = await api.post("/", motoData);
+    const response = await api.post("/motos", motoData);
     return response.data;
   } catch (error) {
     console.error("Erro ao criar moto:", error.response?.data || error.message);
@@ -50,9 +43,9 @@ export const createMoto = async (motoData) => {
 };
 
 export const deleteMoto = async (id) => {
-  // ... (seu código deleteMoto)
   try {
-    await api.delete(`/${id}`);
+    console.log("Deleting moto with ID:", id);
+    await api.delete(`/motos/${id}`);
   } catch (error) {
     console.error(
       "Erro ao deletar moto:",
@@ -63,9 +56,8 @@ export const deleteMoto = async (id) => {
 };
 
 export const updateMoto = async (id, motoData) => {
-  // ... (seu código updateMoto)
   try {
-    const response = await api.put(`/${id}`, motoData);
+    const response = await api.put(`/motos/${id}`, motoData);
     return response.data;
   } catch (error) {
     console.error(

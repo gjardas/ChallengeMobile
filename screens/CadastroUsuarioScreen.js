@@ -1,4 +1,3 @@
-// screens/CadastroUsuarioScreen.js
 import React, { useState } from "react";
 import {
   View,
@@ -10,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { register } from "../services/AuthService"; // Função de registro do Firebase
+import { register } from "../services/AuthService";
 
 export default function CadastroUsuarioScreen() {
   const navigation = useNavigation();
@@ -21,9 +20,8 @@ export default function CadastroUsuarioScreen() {
   const [error, setError] = useState("");
 
   const handleRegister = async () => {
-    setError(""); // Limpa erros anteriores
+    setError("");
 
-    // 1. Validações Locais (Critério 2 - Formulário)
     if (!email || !password || !confirmPassword) {
       setError("Todos os campos são obrigatórios.");
       return;
@@ -37,7 +35,7 @@ export default function CadastroUsuarioScreen() {
       return;
     }
 
-    setIsLoading(true); // 2. Indicador de Carregamento (Critério 2)
+    setIsLoading(true);
 
     try {
       await register(email, password);
@@ -45,12 +43,9 @@ export default function CadastroUsuarioScreen() {
       Alert.alert(
         "Sucesso",
         "Usuário cadastrado com sucesso! Faça login para continuar.",
-        [
-          { text: "OK", onPress: () => navigation.navigate("Login") }, // Redireciona para o Login
-        ]
+        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
       );
     } catch (firebaseError) {
-      // 3. Tratamento de Erros do Firebase (Critério 2 - Feedback)
       let errorMessage = "Erro ao cadastrar. Tente novamente.";
 
       if (firebaseError.code === "auth/email-already-in-use") {

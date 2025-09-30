@@ -1,8 +1,6 @@
-// config/FirebaseConfig.js
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-// SUBSTITUA PELAS SUAS CHAVES DE CONFIGURAÇÃO DO FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyAFgKdErjZgqNuCCZDndQNMH541X7Z6pzE",
   authDomain: "mottu-e25a9.firebaseapp.com",
@@ -14,8 +12,6 @@ const firebaseConfig = {
   measurementId: "G-NE3FPLLCFZ",
 };
 
-// Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
 
-// Exporta o serviço de autenticação para uso
 export const FIREBASE_AUTH = getAuth(app);

@@ -21,8 +21,7 @@ export default function ListaScreen() {
   const carregarMotos = async () => {
     setIsLoading(true);
     try {
-      // getMotos() já retorna o array de motos do .content
-      const data = await getMotos(); // Defesa de Código: Garante que o estado é um array vazio se a API falhar.
+      const data = await getMotos();
       setMotos(data || []);
     } catch (error) {
       console.error("Falha ao carregar motos:", error);
@@ -33,9 +32,10 @@ export default function ListaScreen() {
     }
   };
 
-  const excluirMoto = async (placa) => {
+  const excluirMoto = async (id) => {
+    console.log("Excluindo moto com ID:", id);
     try {
-      await deleteMoto(placa);
+      await deleteMoto(id);
       Alert.alert("Sucesso", "Moto excluída com sucesso.");
       carregarMotos();
     } catch (error) {
@@ -89,7 +89,7 @@ export default function ListaScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => confirmarExclusao(item.placa)}
+          onPress={() => confirmarExclusao(item.id)}
         >
           <Ionicons name="trash-outline" size={24} color="#1e1e1e" />
         </TouchableOpacity>
@@ -97,7 +97,7 @@ export default function ListaScreen() {
     </View>
   );
 
-  console.log('Motos recebidas do backend:', motos);
+  console.log("Motos recebidas do backend:", motos);
   return (
     <View style={{ flex: 1, backgroundColor: "#1e1e1e" }}>
       <HeaderCustom title="Lista de Motos" />

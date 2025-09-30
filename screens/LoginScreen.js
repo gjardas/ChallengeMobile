@@ -1,4 +1,3 @@
-// screens/LoginScreen.js
 import React, { useState } from "react";
 import {
   View,
@@ -9,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { login } from "../services/AuthService"; // Função de login do Firebase
+import { login } from "../services/AuthServices";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -29,9 +28,7 @@ export default function LoginScreen() {
     setIsLoading(true);
 
     try {
-      // Chama o serviço de login. O AuthContext cuida de atualizar o estado global
       await login(email, password);
-      // Se for sucesso, o AuthContext redireciona o usuário para o App Stack
     } catch (firebaseError) {
       let errorMessage = "Falha no login. Verifique suas credenciais.";
 

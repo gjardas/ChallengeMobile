@@ -17,9 +17,8 @@ export default function CadastroScreen() {
   const [placa, setPlaca] = useState("");
   const [modelo, setModelo] = useState("");
   const [ano, setAno] = useState("");
-  const [rfidTag, setRfidTag] = useState("");
   const [status, setStatus] = useState("");
-  const [vaga, setVaga] = useState("");
+  const [observacoes, setObservacoes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -34,31 +33,22 @@ export default function CadastroScreen() {
       setErro("Informe a placa da moto");
       return;
     }
-
-    if (!placaValida(placa)) {
-      setErro("Placa inválida (formato: ABC1234 ou ABC1D23)");
-      return;
-    }
-
     setErro("");
     setIsLoading(true);
-
     try {
       const novaMotoData = {
         placa: placa.toUpperCase(),
         modelo,
         ano,
-        rfidTag,
         status,
-        vaga,
+        observacoes,
       };
       const response = await createMoto(novaMotoData);
       setPlaca("");
       setModelo("");
       setAno("");
-      setRfidTag("");
       setStatus("");
-      setVaga("");
+      setObservacoes("");
       Alert.alert("Sucesso", "Moto cadastrada com sucesso!");
     } catch (error) {
       console.error("Falha ao salvar moto:", error);
@@ -105,13 +95,6 @@ export default function CadastroScreen() {
           keyboardType="numeric"
         />
         <TextInput
-          placeholder="RFID Tag"
-          style={styles.input}
-          value={rfidTag}
-          onChangeText={setRfidTag}
-          placeholderTextColor="#7f7f7f"
-        />
-        <TextInput
           placeholder="Status"
           style={styles.input}
           value={status}
@@ -119,12 +102,11 @@ export default function CadastroScreen() {
           placeholderTextColor="#7f7f7f"
         />
         <TextInput
-          placeholder="Vaga"
+          placeholder="Observações"
           style={styles.input}
-          value={vaga}
-          onChangeText={setVaga}
+          value={observacoes}
+          onChangeText={setObservacoes}
           placeholderTextColor="#7f7f7f"
-          keyboardType="numeric"
         />
         {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
         <TouchableOpacity
@@ -138,7 +120,6 @@ export default function CadastroScreen() {
             <Text style={styles.buttonText}>Salvar</Text>
           )}
         </TouchableOpacity>
-        {/* Mensagem de sucesso pode ser adaptada conforme retorno do backend */}
       </View>
     </View>
   );
