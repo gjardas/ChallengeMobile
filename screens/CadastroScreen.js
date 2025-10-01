@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+// screens/CadastroScreen.js (CÓDIGO FINAL COM VAGA AUTOMÁTICA E VALIDAÇÕES)
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,13 +8,23 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import HeaderCustom from "../components/HeaderCustom";
-import { createMoto } from "../services/ApiService";
+import { createMoto, getMotos } from "../services/ApiService"; // getMotos necessário para a vaga automática
+import { saveVaga } from "../services/VagaService"; // Importe o serviço local de vagas
 
-export default function CadastroScreen() {
-  const navigation = useNavigation();
+const NUM_VAGAS = 20; // Defina o limite de vagas
+
+// Função utilitária para validação de placa
+const placaValida = (placa) => {
+  const antiga = /^[A-Z]{3}[0-9]{4}$/i;
+  const mercosul = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/i;
+  return antiga.test(placa) || mercosul.test(placa);
+};
+
+export default function CadastroScreen({ navigation }) {
   const [placa, setPlaca] = useState("");
   const [modelo, setModelo] = useState("");
   const [ano, setAno] = useState("");
@@ -22,34 +33,91 @@ export default function CadastroScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [erro, setErro] = useState("");
 
-  const placaValida = (placa) => {
-    const antiga = /^[A-Z]{3}[0-9]{4}$/i;
-    const mercosul = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/i;
-    return antiga.test(placa) || mercosul.test(placa);
+  const encontrarProximaVagaLivre = async () => {
+    try {
+      const motos = await getMotos();
+
+      // Criamos um mapa local das vagas ocupadas usando o campo 'vaga' retornado pela API
+      const vagasOcupadas = new Set(
+        motos.map((m) => parseInt(m.vaga)).filter((v) => !isNaN(v) && v > 0)
+      );
+
+      // Tentamos encontrar o primeiro número livre
+      for (let i = 1; i <= NUM_VAGAS; i++) {
+        if (!vagasOcupadas.has(i)) {
+          return i;
+        }
+      }
+      return null;
+    } catch (error) {
+      // Em caso de falha da API, retornamos null
+      return null;
+    }
   };
 
   const salvar = async () => {
+    setErro("");
+
+    // 1. VALIDAÇÕES COMPLETAS (Critério 1.c)
     if (!placa.trim()) {
-      setErro("Informe a placa da moto");
+      setErro("Informe a placa da moto.");
       return;
     }
-    setErro("");
+    if (!placaValida(placa)) {
+      setErro("Formato da placa inválido. Use ABC1234 ou ABC1D23.");
+      return;
+    }
+    const anoNum = parseInt(ano);
+    if (
+      isNaN(anoNum) ||
+      anoNum < 1900 ||
+      anoNum > new Date().getFullYear() + 1
+    ) {
+      setErro("Ano inválido.");
+      return;
+    }
+
     setIsLoading(true);
+
+    // 2. LÓGICA DE ALOCAÇÃO AUTOMÁTICA
+    const vagaEncontrada = await encontrarProximaVagaLivre();
+
+    if (vagaEncontrada === null) {
+      setErro(`Todas as ${NUM_VAGAS} vagas estão ocupadas.`);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const novaMotoData = {
         placa: placa.toUpperCase(),
-        modelo,
-        ano,
-        status,
-        observacoes,
+        modelo: modelo.trim(),
+        ano: anoNum,
+        status: status.trim() || "ATIVO",
+        observacoes: observacoes.trim(),
+        // Enviamos a vaga, esperando que a API persista.
+        vaga: vagaEncontrada,
       };
-      const response = await createMoto(novaMotoData);
+
+      // 3. ENVIA OS DADOS PARA A API
+      await createMoto(novaMotoData);
+
+      // 4. WORKAROUND: SALVA A VAGA NO STORAGE LOCAL PARA GARANTIR O MAPA
+      await saveVaga(novaMotoData.placa, vagaEncontrada);
+
+      // Limpa formulário após sucesso
       setPlaca("");
       setModelo("");
       setAno("");
       setStatus("");
       setObservacoes("");
-      Alert.alert("Sucesso", "Moto cadastrada com sucesso!");
+
+      Alert.alert(
+        "Sucesso",
+        `Moto cadastrada automaticamente na vaga ${vagaEncontrada}!`
+      );
+      // Navega para a lista para ver a moto cadastrada
+      navigation.navigate("Lista");
     } catch (error) {
       console.error("Falha ao salvar moto:", error);
       setErro(error.response?.data?.message || "Erro ao cadastrar a moto.");
@@ -58,18 +126,12 @@ export default function CadastroScreen() {
     }
   };
 
-  const voltarHome = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Início" }],
-    });
-  };
-
   return (
     <View style={styles.screenContainer}>
       <HeaderCustom navigation={navigation} />
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Cadastro de Moto</Text>
+
         <TextInput
           placeholder="Placa"
           style={styles.input}
@@ -108,6 +170,7 @@ export default function CadastroScreen() {
           onChangeText={setObservacoes}
           placeholderTextColor="#7f7f7f"
         />
+
         {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
         <TouchableOpacity
           style={styles.button}
@@ -120,7 +183,7 @@ export default function CadastroScreen() {
             <Text style={styles.buttonText}>Salvar</Text>
           )}
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -131,7 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1e1e1e",
   },
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
@@ -143,12 +206,12 @@ const styles = StyleSheet.create({
     color: "#00ff7f",
   },
   input: {
-    width: "40%",
+    width: "70%",
     borderWidth: 1,
     borderColor: "#00ff7f",
     backgroundColor: "#2a2a2a",
     padding: 12,
-    marginBottom: 6,
+    marginBottom: 10,
     borderRadius: 8,
     color: "#fff",
     textAlign: "center",
@@ -163,27 +226,20 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#00ff7f",
     paddingVertical: 12,
-    width: "40%",
+    width: "70%",
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 5,
+    marginTop: 15,
   },
   buttonText: {
     color: "#1e1e1e",
     fontWeight: "bold",
     fontSize: 18,
   },
-  infoBox: {
-    marginTop: 25,
-    alignItems: "center",
-  },
   infoText: {
-    color: "#d0f0c0",
-    fontSize: 16,
-    marginVertical: 3,
-  },
-  destaque: {
     color: "#00ff7f",
-    fontWeight: "bold",
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: "center",
   },
 });

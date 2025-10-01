@@ -1,117 +1,184 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Dimensions, ScrollView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// screens/MapaScreen.js (CÓDIGO FINAL COM WORKAROUND DA API)
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import HeaderCustom from "../components/HeaderCustom";
+import { getMotos } from "../services/ApiService";
+import { loadVagasMap } from "../services/VagaService"; // <<< Importe o serviço local de vagas
+import { Ionicons } from "@expo/vector-icons";
 
-const NUM_COLS = 4;
-const NUM_VAGAS = 12;
+const NUM_VAGAS = 20;
 
 export default function MapaScreen({ navigation }) {
-  const [vagas, setVagas] = useState(Array(NUM_VAGAS).fill(false));
+  const [vagas, setVagas] = useState(Array(NUM_VAGAS).fill(null));
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const carregarMotos = async () => {
-      try {
-        const data = await AsyncStorage.getItem("motos");
-        const motos = data ? JSON.parse(data) : [];
+  const carregarStatusVagas = async () => {
+    setIsLoading(true);
+    try {
+      // 1. Pega todas as motos da API
+      const motosAPI = await getMotos();
 
-        const vagasOcupadas = Array(NUM_VAGAS).fill(false);
+      // 2. Pega o mapeamento Placa -> Vaga do Storage Local (WORKAROUND)
+      const vagasMap = await loadVagasMap();
 
-        motos.forEach((moto) => {
-          const vagaNum = Number(moto.vaga);
-          if (vagaNum >= 1 && vagaNum <= NUM_VAGAS) {
-            vagasOcupadas[vagaNum - 1] = true;
-          }
-        });
+      const novoStatusVagas = Array(NUM_VAGAS).fill(null);
 
-        setVagas(vagasOcupadas);
-      } catch (error) {
-        console.error("Erro ao carregar motos:", error);
-      }
-    };
+      // 3. Combina os dados: Mapeia as motos da API para as vagas do Storage Local
+      motosAPI.forEach((moto) => {
+        const placa = moto.placa;
 
-    carregarMotos();
-  }, []);
+        // Busca o número da vaga no mapa local, usando a Placa como chave
+        const vagaNumStr = vagasMap[placa];
+        const numeroVaga = parseInt(vagaNumStr);
 
-  const larguraVaga =
-    (Dimensions.get("window").width - 40 - (NUM_COLS - 1) * 10) / NUM_COLS;
+        if (!isNaN(numeroVaga) && numeroVaga > 0 && numeroVaga <= NUM_VAGAS) {
+          // Marca a vaga com o objeto moto (e o número da vaga)
+          novoStatusVagas[numeroVaga - 1] = { ...moto, vaga: numeroVaga };
+        }
+      });
+
+      setVagas(novoStatusVagas);
+    } catch (error) {
+      console.error("Falha ao carregar vagas:", error);
+      Alert.alert(
+        "Erro de API",
+        "Não foi possível carregar o mapa de vagas. Verifique o login ou a conexão."
+      );
+      setVagas(Array(NUM_VAGAS).fill(null));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      carregarStatusVagas();
+      return () => {};
+    }, [])
+  );
+
+  const renderVagas = () => {
+    return vagas.map((moto, index) => {
+      const vagaOcupada = !!moto;
+      const numero = index + 1;
+      const statusText = vagaOcupada ? moto.placa : "LIVRE";
+      const statusDetail = vagaOcupada
+        ? `Modelo: ${moto.modelo || "N/A"}`
+        : "Estacionar aqui";
+      const style = vagaOcupada ? styles.vagaOcupada : styles.vagaLivre;
+      const icon = vagaOcupada
+        ? "close-circle-outline"
+        : "checkmark-circle-outline";
+
+      return (
+        <View key={index} style={[styles.vaga, style]}>
+          <View style={styles.vagaHeader}>
+            <Ionicons
+              name={icon}
+              size={24}
+              color={vagaOcupada ? "#fff" : "#1e1e1e"}
+            />
+            <Text style={styles.vagaNumero}>VAGA {numero}</Text>
+          </View>
+          <Text style={styles.vagaStatus}>{statusText}</Text>
+          <Text style={styles.vagaDetail}>{statusDetail}</Text>
+        </View>
+      );
+    });
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: "#1e1e1e" }}>
-      <HeaderCustom navigation={navigation} title="Mapa" />
+      <HeaderCustom navigation={navigation} title="Mapa de Vagas" />
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Mapa de Vagas (Atualizado)</Text>
-        <Text style={styles.subtitle}>
-          Vagas ocupadas de acordo com motos cadastradas
+      <View style={styles.container}>
+        <Text style={styles.title}>
+          Mapa de Vagas - {vagas.filter((v) => v).length} Ocupadas de{" "}
+          {NUM_VAGAS}
         </Text>
 
-        <View style={styles.grid}>
-          {vagas.map((ocupada, i) => (
-            <View
-              key={i}
-              style={[
-                styles.vaga,
-                ocupada ? styles.ocupada : styles.livre,
-                { width: larguraVaga, height: larguraVaga },
-              ]}
-            >
-              <Text style={styles.vagaTexto}>Vaga {i + 1}</Text>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
+        {isLoading ? (
+          <ActivityIndicator
+            size="large"
+            color="#00ff7f"
+            style={styles.loadingIndicator}
+          />
+        ) : (
+          <ScrollView contentContainerStyle={styles.mapaContainer}>
+            {renderVagas()}
+          </ScrollView>
+        )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    flex: 1,
+    padding: 10,
     alignItems: "center",
   },
-
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
     color: "#00ff7f",
+    marginVertical: 15,
   },
-
-  subtitle: {
-    fontSize: 16,
-    color: "#d0f0c0",
-    marginBottom: 20,
-    textAlign: "center",
+  loadingIndicator: {
+    marginTop: 50,
   },
-
-  grid: {
+  mapaContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    width: "100%",
   },
-
   vaga: {
+    width: "48%",
+    marginVertical: 5,
+    padding: 15,
     borderRadius: 8,
-    marginBottom: 10,
-    justifyContent: "center",
+    borderWidth: 2,
     alignItems: "center",
-    borderWidth: 1,
+  },
+  vagaHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  vagaLivre: {
+    backgroundColor: "#00ff7f15",
     borderColor: "#00ff7f",
-    backgroundColor: "#2a2a2a",
   },
-
-  ocupada: {
-    backgroundColor: "#00cc44",
+  vagaOcupada: {
+    backgroundColor: "#ff4d4d15",
+    borderColor: "#ff4d4d",
   },
-
-  livre: {
-    backgroundColor: "#555555",
-  },
-
-  vagaTexto: {
-    color: "#fff",
+  vagaNumero: {
+    fontSize: 16,
     fontWeight: "bold",
+    color: "#fff",
+    marginLeft: 5,
+  },
+  vagaStatus: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
+  },
+  vagaDetail: {
+    fontSize: 12,
+    color: "#ccc",
+    textAlign: "center",
+    marginTop: 2,
   },
 });
