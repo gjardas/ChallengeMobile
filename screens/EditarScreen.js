@@ -11,10 +11,64 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import HeaderCustom from "../components/HeaderCustom";
 import { updateMoto } from "../services/ApiService";
+import { useTheme } from "../contexts/themeContext";
+
+const createStyles = (theme) =>
+  StyleSheet.create({
+    screenContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    container: {
+      flex: 1,
+      padding: 20,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    title: {
+      fontSize: 22,
+      fontWeight: "bold",
+      marginBottom: 30,
+      color: theme.colors.primary,
+    },
+    input: {
+      width: "80%",
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.surface,
+      padding: 12,
+      marginVertical: 10,
+      borderRadius: 8,
+      color: theme.colors.text,
+      textAlign: "center",
+      fontSize: 16,
+    },
+    erroTexto: {
+      color: "red",
+      marginBottom: 10,
+      fontSize: 14,
+      textAlign: "center",
+    },
+    button: {
+      backgroundColor: theme.colors.primary,
+      paddingVertical: 12,
+      width: "80%",
+      borderRadius: 8,
+      alignItems: "center",
+      marginVertical: 12,
+      minHeight: 48,
+    },
+    buttonText: {
+      color: theme.colors.background,
+      fontWeight: "bold",
+      fontSize: 18,
+    },
+  });
 
 export default function EditarScreen() {
   const navigation = useNavigation();
   const route = useRoute();
+  const { theme } = useTheme();
   const [placa, setPlaca] = useState("");
   const [modelo, setModelo] = useState("");
   const [ano, setAno] = useState("");
@@ -22,6 +76,7 @@ export default function EditarScreen() {
   const [observacoes, setObservacoes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [erro, setErro] = useState("");
+  const styles = createStyles(theme);
 
   const motoId = route.params?.moto.id;
 
@@ -112,54 +167,3 @@ export default function EditarScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    backgroundColor: "#1e1e1e",
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 30,
-    color: "#00ff7f",
-  },
-  input: {
-    width: "80%",
-    borderWidth: 1,
-    borderColor: "#00ff7f",
-    backgroundColor: "#2a2a2a",
-    padding: 12,
-    marginVertical: 10,
-    borderRadius: 8,
-    color: "#fff",
-    textAlign: "center",
-    fontSize: 16,
-  },
-  erroTexto: {
-    color: "red",
-    marginBottom: 10,
-    fontSize: 14,
-    textAlign: "center",
-  },
-  button: {
-    backgroundColor: "#00ff7f",
-    paddingVertical: 12,
-    width: "80%",
-    borderRadius: 8,
-    alignItems: "center",
-    marginVertical: 12,
-    minHeight: 48,
-  },
-  buttonText: {
-    color: "#1e1e1e",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-});

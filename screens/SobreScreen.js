@@ -8,10 +8,77 @@ import {
   Dimensions,
 } from "react-native";
 import HeaderCustom from "../components/HeaderCustom";
+import { useTheme } from "../contexts/themeContext";
+
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flexGrow: 1,
+      paddingVertical: 24,
+      paddingHorizontal: 16,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.colors.background,
+    },
+    integrantes: {
+      marginTop: 32,
+      fontSize: 28,
+      fontWeight: "bold",
+      color: theme.colors.primary,
+      marginBottom: 16,
+      textAlign: "center",
+    },
+    imageRow: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 24,
+      gap: 24,
+    },
+    imageContainer: {
+      alignItems: "center",
+      marginHorizontal: 8,
+    },
+    image: {
+      width: 120,
+      height: 120,
+      borderRadius: 8,
+      marginBottom: 8,
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.surface,
+    },
+    imageCaption: {
+      color: theme.colors.primary,
+      fontSize: 14,
+      textAlign: "center",
+      marginBottom: 8,
+      width: 120,
+    },
+    title: {
+      fontSize: 22,
+      fontWeight: "bold",
+      marginBottom: 16,
+      textAlign: "center",
+      color: theme.colors.primary,
+    },
+    texto: {
+      fontSize: 16,
+      lineHeight: 24,
+      textAlign: "center",
+      color: theme.colors.text,
+      marginBottom: 32,
+      width: "90%",
+      alignSelf: "center",
+    },
+  });
 
 export default function SobreScreen({ navigation }) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   return (
-    <View style={{ flex: 1, backgroundColor: "#1e1e1e" }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <HeaderCustom navigation={navigation} title="Sobre" />
 
       <ScrollView contentContainerStyle={styles.container}>
@@ -52,72 +119,3 @@ export default function SobreScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#1e1e1e",
-  },
-
-  integrantes: {
-    marginTop: 32,
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#00ff7f",
-    marginBottom: 16,
-    textAlign: "center",
-  },
-
-  imageRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 24,
-    gap: 24,
-  },
-
-  imageContainer: {
-    alignItems: "center",
-    marginHorizontal: 8,
-  },
-
-  image: {
-    width: 120,
-    height: 120,
-    borderRadius: 8,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: "#00ff7f",
-    backgroundColor: "#2a2a2a",
-  },
-
-  imageCaption: {
-    color: "#00ff7f",
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 8,
-    width: 120,
-  },
-
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 16,
-    textAlign: "center",
-    color: "#00ff7f",
-  },
-
-  texto: {
-    fontSize: 16,
-    lineHeight: 24,
-    textAlign: "center",
-    color: "#d0f0c0",
-    marginBottom: 32,
-    width: "90%",
-    alignSelf: "center",
-  },
-});

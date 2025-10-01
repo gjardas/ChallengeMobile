@@ -9,13 +9,70 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { login } from "../services/AuthServices";
+import { useTheme } from "../contexts/themeContext";
+
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 20,
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: "bold",
+      marginBottom: 40,
+      color: theme.colors.primary,
+    },
+    input: {
+      width: "80%",
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.surface,
+      padding: 12,
+      marginVertical: 10,
+      borderRadius: 8,
+      color: theme.colors.text,
+      textAlign: "center",
+      fontSize: 16,
+    },
+    button: {
+      backgroundColor: theme.colors.primary,
+      paddingVertical: 12,
+      width: "80%",
+      borderRadius: 8,
+      alignItems: "center",
+      marginVertical: 12,
+      minHeight: 48,
+    },
+    buttonText: {
+      color: theme.colors.background,
+      fontWeight: "bold",
+      fontSize: 18,
+    },
+    errorText: {
+      color: "#ff4d4d",
+      marginBottom: 15,
+      fontSize: 14,
+      textAlign: "center",
+    },
+    linkText: {
+      color: theme.colors.primary,
+      marginTop: 10,
+      fontSize: 16,
+    },
+  });
 
 export default function LoginScreen() {
   const navigation = useNavigation();
+  const { theme } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const styles = createStyles(theme);
 
   const handleLogin = async () => {
     setError("");
@@ -93,56 +150,3 @@ export default function LoginScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#1e1e1e",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginBottom: 40,
-    color: "#00ff7f",
-  },
-  input: {
-    width: "80%",
-    borderWidth: 1,
-    borderColor: "#00ff7f",
-    backgroundColor: "#2a2a2a",
-    padding: 12,
-    marginVertical: 10,
-    borderRadius: 8,
-    color: "#fff",
-    textAlign: "center",
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: "#00ff7f",
-    paddingVertical: 12,
-    width: "80%",
-    borderRadius: 8,
-    alignItems: "center",
-    marginVertical: 12,
-    minHeight: 48,
-  },
-  buttonText: {
-    color: "#1e1e1e",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  errorText: {
-    color: "#ff4d4d",
-    marginBottom: 15,
-    fontSize: 14,
-    textAlign: "center",
-  },
-  linkText: {
-    color: "#00ff7f",
-    marginTop: 10,
-    fontSize: 16,
-  },
-});

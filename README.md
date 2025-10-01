@@ -1,74 +1,252 @@
+# 🏍️ Mottu - Sistema de Gestão de Motos
 
-# Aplicativo de Gerenciamento de Vagas para Motos com RFID
+Sistema mobile para gerenciamento de motos e vagas de estacionamento desenvolvido para a Mottu, utilizando React Native e Firebase.
 
-## Integrantes
+## 📱 Funcionalidades Principais
 
-- Guilherme Jardim - RM556814  
-- Fernando Fontes - RM555317  
+### Autenticação
 
----
+- Login seguro com e-mail e senha
+- Cadastro de novos usuários
+- Sistema de logout
 
-## Descrição do Projeto
+### Gestão de Motos
 
-Este aplicativo foi desenvolvido para solucionar o problema da empresa Mottu, que necessita de um sistema eficiente para gerenciamento de vagas de motos utilizando tecnologia RFID. A solução permite:
+- Cadastro de motos com:
+  - Placa (validação de formato Mercosul e antigo)
+  - Modelo
+  - Ano
+  - Status
+  - Observações
+- Listagem completa de motos cadastradas
+- Edição de informações
+- Exclusão de registros
+- Alocação automática de vagas
 
-- Cadastro de motos com placa, vaga, e RFID;
-- Visualização dinâmica do mapa de vagas com indicação das vagas ocupadas;
-- Atualização automática do mapa conforme motos são cadastradas ou removidas;
-- Tela sobre o projeto e seus integrantes;
-- Navegação intuitiva entre as telas.
+### Mapa de Vagas
 
----
+- Visualização em tempo real do status das vagas
+- 20 vagas disponíveis
+- Indicadores visuais de ocupação
+- Integração com RFID para identificação
+- Cores diferentes para vagas livres e ocupadas
 
-## Como Rodar o Projeto Localmente
+## 🚀 Tecnologias Utilizadas
+
+- React Native
+- Firebase Authentication
+- Firebase Realtime Database
+- React Navigation
+- React Native Paper
+- Expo Vector Icons
+- AsyncStorage para persistência local
+
+## 🛠️ Configuração do Ambiente
 
 ### Pré-requisitos
 
 - Node.js (versão recomendada >= 16)
-- Expo CLI instalado globalmente (`npm install -g expo-cli`)
-- Android Studio ou Xcode para emuladores, ou dispositivo físico com Expo Go instalado
+- npm ou yarn
+- Expo CLI (`npm install -g expo-cli`)
+- Android Studio ou Xcode para emuladores
+- Firebase Project configurado
 
-### Passos para execução
+### Instalação
 
-1. Clone este repositório:
-   ```bash
-   git clone <URL_DO_REPOSITORIO>
-   ```
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/[seu-usuario]/ChallengeMobile.git
+```
 
 2. Entre na pasta do projeto:
-   ```bash
-   cd <NOME_DA_PASTA_DO_PROJETO>
-   ```
+
+```bash
+cd ChallengeMobile
+```
 
 3. Instale as dependências:
-   ```bash
-   npm install
-   ```
 
-4. Inicie o servidor do Expo:
-   ```bash
-   npm start
-   ```
+```bash
+npm install
+```
 
-5. Rode o app em um emulador ou dispositivo físico:
-   - Para Android: use um emulador ou abra o app Expo Go no dispositivo e escaneie o QR code.
-   - Para iOS: use um simulador ou dispositivo físico com Expo Go e escaneie o QR code.
+4. Configure as variáveis de ambiente do Firebase:
+   - Crie um arquivo `FirebaseConfig.js` na pasta `config`
+   - Adicione suas credenciais do Firebase seguindo o modelo:
 
----
+```javascript
+export const firebaseConfig = {
+  apiKey: "sua-api-key",
+  authDomain: "seu-auth-domain",
+  projectId: "seu-project-id",
+  storageBucket: "seu-storage-bucket",
+  messagingSenderId: "seu-messaging-sender-id",
+  appId: "seu-app-id",
+};
+```
 
-## Estrutura do Projeto
+5. Inicie o projeto:
 
-- `screens/` — Telas principais da aplicação (Lista, Mapa, Sobre, etc.)
-- `components/` — Componentes reutilizáveis como o HeaderCustom
-- `assets/` — Imagens e recursos estáticos
-- `App.js` — Entrada principal da aplicação
+```bash
+npm start
+```
 
----
+6. Rode o app:
+   - Para Android: use `a` no terminal ou abra no Android Studio
+   - Para iOS: use `i` no terminal ou abra no Xcode
+   - No dispositivo físico: escaneie o QR code com o Expo Go
 
-## Considerações Finais
+## 📌 Estrutura do Projeto
 
-Este projeto integra conceitos de React Native, AsyncStorage para armazenamento local e navegação via React Navigation. O mapa de vagas é atualizado automaticamente com base nas motos cadastradas, garantindo uma visão em tempo real do uso do espaço.
+```
+ChallengeMobile/
+├── assets/             # Imagens e recursos
+│   ├── adaptive-icon.png
+│   ├── favicon.png
+│   ├── icon.png
+│   └── splash-icon.png
+├── components/         # Componentes reutilizáveis
+│   ├── HeaderCustom   # Header personalizado
+│   └── MotoCard      # Card para exibição de motos
+├── config/            # Configurações
+│   └── FirebaseConfig # Config do Firebase
+├── contexts/          # Contextos React
+│   ├── AuthContext   # Contexto de autenticação
+│   └── ThemeContext  # Contexto de tema (claro/escuro)
+├── routes/            # Configuração de rotas
+│   ├── auth.routes   # Rotas de autenticação
+│   ├── stack.routes  # Rotas da aplicação
+│   └── Routes        # Configuração principal
+├── screens/           # Telas do aplicativo
+│   ├── LoginScreen
+│   ├── CadastroUsuarioScreen
+│   ├── HomeScreen
+│   ├── CadastroScreen
+│   ├── ListaScreen
+│   ├── MapaScreen
+│   ├── EditarScreen
+│   └── SobreScreen
+├── services/          # Serviços e APIs
+│   ├── ApiService    # Serviços de API
+│   ├── AuthServices  # Serviços de autenticação
+│   └── VagaService   # Serviços de gestão de vagas
+├── themes/           # Configuração de temas
+│   └── theme.js     # Definição dos temas claro/escuro
+└── utils/           # Utilitários
+    └── storage.js   # Funções de armazenamento local
+```
 
----
+## 🎨 Temas
 
-Se tiver dúvidas ou sugestões, fique à vontade para entrar em contato!
+O aplicativo suporta dois temas que podem ser alternados no menu:
+
+### Tema Claro
+
+- Cores suaves e profissionais
+- Fundo em tons pastel para conforto visual
+- Verde institucional mais suave
+- Ideal para uso diurno
+
+### Tema Escuro
+
+- Verde neon característico da Mottu
+- Fundo escuro para uso noturno
+- Alto contraste para melhor visibilidade
+- Reduz fadiga visual em ambientes escuros
+
+## 📱 Telas e Funcionalidades
+
+### Login (`LoginScreen.js`)
+
+- Acesso seguro ao sistema
+- Validação de credenciais
+- Link para cadastro de novos usuários
+- Feedback de erros de autenticação
+
+### Cadastro de Usuário (`CadastroUsuarioScreen.js`)
+
+- Formulário de registro com validações
+- Verificação de força da senha
+- Confirmação de senha
+- Feedback de erros em tempo real
+
+### Home (`HomeScreen.js`)
+
+- Dashboard principal
+- Menu de navegação
+- Acesso rápido a todas as funcionalidades
+- Alternador de tema claro/escuro
+
+### Cadastro de Moto (`CadastroScreen.js`)
+
+- Formulário completo com validações
+- Suporte a placas Mercosul e padrão antigo
+- Alocação automática de vagas
+- Feedback de sucesso/erro
+
+### Lista de Motos (`ListaScreen.js`)
+
+- Visualização de todas as motos cadastradas
+- Opções de edição e exclusão
+- Filtros e ordenação
+- Detalhes completos de cada moto
+
+### Mapa de Vagas (`MapaScreen.js`)
+
+- Visualização em grid do estacionamento
+- Atualização em tempo real
+- Indicadores de status por cor
+- Informações detalhadas por vaga
+
+### Edição (`EditarScreen.js`)
+
+- Formulário pré-preenchido
+- Validações de campos
+- Atualização em tempo real
+- Confirmação de alterações
+
+### Sobre (`SobreScreen.js`)
+
+- Informações do projeto
+- Equipe de desenvolvimento
+- Versão do aplicativo
+- Links úteis
+
+## 🔐 Segurança e Armazenamento
+
+### Firebase Authentication
+
+- Login seguro com email/senha
+- Tokens de autenticação
+- Recuperação de senha
+- Proteção de rotas
+
+### Firebase Realtime Database
+
+- Armazenamento em tempo real
+- Sincronização automática
+- Backup automático
+- Regras de segurança
+
+### AsyncStorage
+
+- Cache local de dados
+- Preferências do usuário
+- Mapeamento de vagas
+- Melhor performance offline
+
+## ✍️ Autores
+
+- Guilherme Jardim (RM556814)
+- Fernando (RM555317)
+
+## 📝 Notas de Versão
+
+### Versão 1.0.0
+
+- Sistema completo de autenticação
+- CRUD de motos
+- Mapa de vagas em tempo real
+- Temas claro e escuro
+- Integração com Firebase

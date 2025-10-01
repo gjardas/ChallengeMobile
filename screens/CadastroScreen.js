@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import HeaderCustom from "../components/HeaderCustom";
 import { createMoto, getMotos } from "../services/ApiService"; // getMotos necessário para a vaga automática
 import { saveVaga } from "../services/VagaService"; // Importe o serviço local de vagas
+import { useTheme } from "../contexts/themeContext";
 
 const NUM_VAGAS = 20; // Defina o limite de vagas
 
@@ -24,7 +25,65 @@ const placaValida = (placa) => {
   return antiga.test(placa) || mercosul.test(placa);
 };
 
+const createStyles = (theme) =>
+  StyleSheet.create({
+    screenContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    container: {
+      flexGrow: 1,
+      padding: 20,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    title: {
+      fontSize: 22,
+      fontWeight: "bold",
+      marginBottom: 30,
+      color: theme.colors.primary,
+    },
+    input: {
+      width: "70%",
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+      backgroundColor: theme.colors.surface,
+      padding: 12,
+      marginBottom: 10,
+      borderRadius: 8,
+      color: theme.colors.text,
+      textAlign: "center",
+      fontSize: 16,
+    },
+    erroTexto: {
+      color: "red",
+      marginBottom: 10,
+      fontSize: 14,
+      textAlign: "center",
+    },
+    button: {
+      backgroundColor: theme.colors.primary,
+      paddingVertical: 12,
+      width: "70%",
+      borderRadius: 8,
+      alignItems: "center",
+      marginTop: 15,
+    },
+    buttonText: {
+      color: theme.colors.background,
+      fontWeight: "bold",
+      fontSize: 18,
+    },
+    infoText: {
+      color: theme.colors.primary,
+      fontSize: 14,
+      marginBottom: 10,
+      textAlign: "center",
+    },
+  });
+
 export default function CadastroScreen({ navigation }) {
+  const { theme } = useTheme();
   const [placa, setPlaca] = useState("");
   const [modelo, setModelo] = useState("");
   const [ano, setAno] = useState("");
@@ -32,6 +91,7 @@ export default function CadastroScreen({ navigation }) {
   const [observacoes, setObservacoes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [erro, setErro] = useState("");
+  const styles = createStyles(theme);
 
   const encontrarProximaVagaLivre = async () => {
     try {
@@ -187,59 +247,3 @@ export default function CadastroScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    backgroundColor: "#1e1e1e",
-  },
-  container: {
-    flexGrow: 1,
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 30,
-    color: "#00ff7f",
-  },
-  input: {
-    width: "70%",
-    borderWidth: 1,
-    borderColor: "#00ff7f",
-    backgroundColor: "#2a2a2a",
-    padding: 12,
-    marginBottom: 10,
-    borderRadius: 8,
-    color: "#fff",
-    textAlign: "center",
-    fontSize: 16,
-  },
-  erroTexto: {
-    color: "red",
-    marginBottom: 10,
-    fontSize: 14,
-    textAlign: "center",
-  },
-  button: {
-    backgroundColor: "#00ff7f",
-    paddingVertical: 12,
-    width: "70%",
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 15,
-  },
-  buttonText: {
-    color: "#1e1e1e",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  infoText: {
-    color: "#00ff7f",
-    fontSize: 14,
-    marginBottom: 10,
-    textAlign: "center",
-  },
-});

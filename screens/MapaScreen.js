@@ -1,4 +1,3 @@
-// screens/MapaScreen.js (CÓDIGO FINAL COM WORKAROUND DA API)
 import React, { useState } from "react";
 import {
   View,
@@ -11,14 +10,81 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import HeaderCustom from "../components/HeaderCustom";
 import { getMotos } from "../services/ApiService";
-import { loadVagasMap } from "../services/VagaService"; // <<< Importe o serviço local de vagas
+import { loadVagasMap } from "../services/VagaService";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../contexts/themeContext";
 
 const NUM_VAGAS = 20;
 
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 10,
+      alignItems: "center",
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: theme.colors.primary,
+      marginVertical: 15,
+    },
+    loadingIndicator: {
+      marginTop: 50,
+    },
+    mapaContainer: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+      width: "100%",
+    },
+    vaga: {
+      width: "48%",
+      marginVertical: 5,
+      padding: 15,
+      borderRadius: 8,
+      borderWidth: 2,
+      alignItems: "center",
+    },
+    vagaHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 5,
+    },
+    vagaLivre: {
+      backgroundColor: `${theme.colors.success}15`,
+      borderColor: theme.colors.success,
+    },
+    vagaOcupada: {
+      backgroundColor: `${theme.colors.error}15`,
+      borderColor: theme.colors.error,
+    },
+    vagaNumero: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: theme.colors.text,
+      marginLeft: 5,
+    },
+    vagaStatus: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: theme.colors.text,
+      textAlign: "center",
+    },
+    vagaDetail: {
+      fontSize: 12,
+      color: theme.colors.text,
+      opacity: 0.7,
+      textAlign: "center",
+      marginTop: 2,
+    },
+  });
+
 export default function MapaScreen({ navigation }) {
+  const { theme } = useTheme();
   const [vagas, setVagas] = useState(Array(NUM_VAGAS).fill(null));
   const [isLoading, setIsLoading] = useState(true);
+  const styles = createStyles(theme);
 
   const carregarStatusVagas = async () => {
     setIsLoading(true);
@@ -84,7 +150,7 @@ export default function MapaScreen({ navigation }) {
             <Ionicons
               name={icon}
               size={24}
-              color={vagaOcupada ? "#fff" : "#1e1e1e"}
+              color={vagaOcupada ? theme.colors.error : theme.colors.success}
             />
             <Text style={styles.vagaNumero}>VAGA {numero}</Text>
           </View>
@@ -96,7 +162,7 @@ export default function MapaScreen({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#1e1e1e" }}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <HeaderCustom navigation={navigation} title="Mapa de Vagas" />
 
       <View style={styles.container}>
@@ -108,7 +174,7 @@ export default function MapaScreen({ navigation }) {
         {isLoading ? (
           <ActivityIndicator
             size="large"
-            color="#00ff7f"
+            color={theme.colors.primary}
             style={styles.loadingIndicator}
           />
         ) : (
@@ -120,65 +186,3 @@ export default function MapaScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#00ff7f",
-    marginVertical: 15,
-  },
-  loadingIndicator: {
-    marginTop: 50,
-  },
-  mapaContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  vaga: {
-    width: "48%",
-    marginVertical: 5,
-    padding: 15,
-    borderRadius: 8,
-    borderWidth: 2,
-    alignItems: "center",
-  },
-  vagaHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 5,
-  },
-  vagaLivre: {
-    backgroundColor: "#00ff7f15",
-    borderColor: "#00ff7f",
-  },
-  vagaOcupada: {
-    backgroundColor: "#ff4d4d15",
-    borderColor: "#ff4d4d",
-  },
-  vagaNumero: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#fff",
-    marginLeft: 5,
-  },
-  vagaStatus: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#fff",
-    textAlign: "center",
-  },
-  vagaDetail: {
-    fontSize: 12,
-    color: "#ccc",
-    textAlign: "center",
-    marginTop: 2,
-  },
-});
