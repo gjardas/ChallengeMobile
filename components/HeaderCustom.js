@@ -156,8 +156,8 @@ const styles = StyleSheet.create({
   },
   sideMenu: {
     position: "absolute",
-    right: 0,
-    top: "100%",
+    right: 10,
+    top: 120,
     backgroundColor: "#2a2a2a",
     width: 200,
     paddingVertical: 10,
