@@ -97,6 +97,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     justifyContent: "center",
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#00ff7f",
+    backgroundColor: "#2a2a2a",
   },
 
   ocupada: {

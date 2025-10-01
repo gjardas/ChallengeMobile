@@ -29,6 +29,7 @@ export default function LoginScreen() {
 
     try {
       await login(email, password);
+      navigation.navigate("Início");
     } catch (firebaseError) {
       let errorMessage = "Falha no login. Verifique suas credenciais.";
 
@@ -50,6 +51,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+      {/* <HeaderCustom navigation={{...navigation, showBack: false}} /> */}
       <Text style={styles.title}>Acesso MOTTU</Text>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -108,25 +110,24 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "80%",
-    maxWidth: 400,
     borderWidth: 1,
     borderColor: "#00ff7f",
     backgroundColor: "#2a2a2a",
-    padding: 15,
-    marginBottom: 10,
+    padding: 12,
+    marginVertical: 10,
     borderRadius: 8,
     color: "#fff",
+    textAlign: "center",
     fontSize: 16,
   },
   button: {
     backgroundColor: "#00ff7f",
-    paddingVertical: 15,
+    paddingVertical: 12,
     width: "80%",
-    maxWidth: 400,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
-    marginBottom: 20,
+    marginVertical: 12,
+    minHeight: 48,
   },
   buttonText: {
     color: "#1e1e1e",

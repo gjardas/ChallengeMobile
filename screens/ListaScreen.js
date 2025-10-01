@@ -97,7 +97,6 @@ export default function ListaScreen() {
     </View>
   );
 
-  console.log("Motos recebidas do backend:", motos);
   return (
     <View style={{ flex: 1, backgroundColor: "#1e1e1e" }}>
       <HeaderCustom navigation={navigation} title="Lista de Motos" />
@@ -160,13 +159,18 @@ const styles = StyleSheet.create({
   },
   editButton: {
     backgroundColor: "#00ff7f",
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: "center",
+    marginRight: 5,
   },
   deleteButton: {
     backgroundColor: "#d9534f",
-    padding: 10,
-    borderRadius: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: "center",
   },
   noMotosContainer: {
     flexGrow: 1,

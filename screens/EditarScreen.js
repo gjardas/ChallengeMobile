@@ -43,20 +43,13 @@ export default function EditarScreen() {
     }
     setErro("");
     setIsLoading(true);
+    // Aqui você pode chamar updateMoto e navegar de volta após salvar
     try {
-      const motoAtualizada = {
-        placa: placa.toUpperCase(),
-        modelo,
-        ano,
-        status,
-        observacoes,
-      };
-      await updateMoto(motoId, motoAtualizada);
+      await updateMoto(motoId, { placa, modelo, ano, status, observacoes });
       Alert.alert("Sucesso", "Moto atualizada com sucesso!");
       navigation.goBack();
     } catch (error) {
-      console.error("Falha ao atualizar moto:", error);
-      setErro(error.response?.data?.message || "Erro ao atualizar a moto.");
+      setErro("Erro ao atualizar moto");
     } finally {
       setIsLoading(false);
     }
@@ -68,53 +61,51 @@ export default function EditarScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>Editar Moto</Text>
         <TextInput
-          placeholder="Placa"
           style={styles.input}
+          placeholder="Placa"
+          placeholderTextColor="#aaa"
           value={placa}
-          onChangeText={(text) => setPlaca(text.toUpperCase())}
-          placeholderTextColor="#7f7f7f"
-          autoCapitalize="characters"
-          maxLength={7}
+          onChangeText={setPlaca}
         />
         <TextInput
-          placeholder="Modelo"
           style={styles.input}
+          placeholder="Modelo"
+          placeholderTextColor="#aaa"
           value={modelo}
           onChangeText={setModelo}
-          placeholderTextColor="#7f7f7f"
         />
         <TextInput
-          placeholder="Ano"
           style={styles.input}
+          placeholder="Ano"
+          placeholderTextColor="#aaa"
           value={ano}
           onChangeText={setAno}
-          placeholderTextColor="#7f7f7f"
           keyboardType="numeric"
         />
         <TextInput
-          placeholder="Status"
           style={styles.input}
+          placeholder="Status"
+          placeholderTextColor="#aaa"
           value={status}
           onChangeText={setStatus}
-          placeholderTextColor="#7f7f7f"
         />
         <TextInput
-          placeholder="Observações"
           style={styles.input}
+          placeholder="Observações"
+          placeholderTextColor="#aaa"
           value={observacoes}
           onChangeText={setObservacoes}
-          placeholderTextColor="#7f7f7f"
         />
-        {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
+        {erro ? <Text style={styles.erroTexto}>{erro}</Text> : null}
         <TouchableOpacity
           style={styles.button}
           onPress={salvarEdicao}
           disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator size="small" color="#1e1e1e" />
+            <ActivityIndicator color="#1e1e1e" />
           ) : (
-            <Text style={styles.buttonText}>Salvar Edição</Text>
+            <Text style={styles.buttonText}>Salvar</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -140,12 +131,12 @@ const styles = StyleSheet.create({
     color: "#00ff7f",
   },
   input: {
-    width: "40%",
+    width: "80%",
     borderWidth: 1,
     borderColor: "#00ff7f",
     backgroundColor: "#2a2a2a",
     padding: 12,
-    marginBottom: 6,
+    marginVertical: 10,
     borderRadius: 8,
     color: "#fff",
     textAlign: "center",
@@ -160,10 +151,11 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#00ff7f",
     paddingVertical: 12,
-    width: "40%",
+    width: "80%",
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 5,
+    marginVertical: 12,
+    minHeight: 48,
   },
   buttonText: {
     color: "#1e1e1e",

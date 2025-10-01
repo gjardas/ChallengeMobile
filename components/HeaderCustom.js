@@ -26,21 +26,29 @@ export default function HeaderCustom({ navigation }) {
       { text: "Cancelar", style: "cancel" },
       {
         text: "Sair",
-        onPress: logout ? logout : () => {},
+        onPress: async () => {
+          if (logout) await logout();
+          if (navigation && navigation.navigate) {
+            navigation.navigate("Login");
+          }
+        },
         style: "destructive",
       },
     ]);
   };
 
+  // Permitir esconder botão voltar via prop
+  const showBack =
+    typeof navigation?.showBack === "boolean" ? navigation.showBack : true;
   const canGoBack =
     navigation && navigation.canGoBack ? navigation.canGoBack() : false;
 
   return (
     <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
       <View style={styles.topBar}>
-        {canGoBack ? (
+        {showBack && canGoBack ? (
           <TouchableOpacity
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("Início")}
             style={styles.backButton}
           >
             <Text style={styles.backText}>← Voltar</Text>

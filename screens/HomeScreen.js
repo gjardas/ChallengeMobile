@@ -5,7 +5,7 @@ import HeaderCustom from "../components/HeaderCustom";
 export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.screenContainer}>
-      <HeaderCustom navigation={navigation} />
+      <HeaderCustom navigation={{ ...navigation, showBack: false }} />
 
       <Text style={styles.title}>Gestão de Vagas e Motos - Mottu</Text>
 
@@ -69,11 +69,12 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#00ff7f",
     paddingVertical: 12,
-    width: "30%",
+    width: "80%",
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
+    marginVertical: 12,
+    minHeight: 48,
   },
   buttonText: {
     color: "#1e1e1e",

@@ -56,49 +56,57 @@ export default function SobreScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 40,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#1e1e1e",
   },
 
   integrantes: {
-    marginTop: 40,
-    fontSize: 40,
+    marginTop: 32,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#00ff7f",
-    marginBottom: 10,
+    marginBottom: 16,
     textAlign: "center",
   },
 
   imageRow: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 200,
-    marginBottom: 30,
+    alignItems: "center",
+    marginBottom: 24,
+    gap: 24,
   },
 
   imageContainer: {
     alignItems: "center",
+    marginHorizontal: 8,
   },
 
   image: {
-    width: 270,
-    height: 270,
+    width: 120,
+    height: 120,
     borderRadius: 8,
-    marginBottom: 6,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: "#00ff7f",
+    backgroundColor: "#2a2a2a",
   },
 
   imageCaption: {
     color: "#00ff7f",
     fontSize: 14,
     textAlign: "center",
+    marginBottom: 8,
+    width: 120,
   },
 
   title: {
     fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 16,
     textAlign: "center",
     color: "#00ff7f",
   },
@@ -108,6 +116,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: "center",
     color: "#d0f0c0",
-    marginBottom: 40,
+    marginBottom: 32,
+    width: "90%",
+    alignSelf: "center",
   },
 });

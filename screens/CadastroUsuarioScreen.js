@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { register } from "../services/AuthService";
+import { register } from "../services/AuthServices";
 
 export default function CadastroUsuarioScreen() {
   const navigation = useNavigation();
@@ -129,25 +129,24 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "80%",
-    maxWidth: 400,
     borderWidth: 1,
     borderColor: "#00ff7f",
     backgroundColor: "#2a2a2a",
-    padding: 15,
-    marginBottom: 10,
+    padding: 12,
+    marginVertical: 10,
     borderRadius: 8,
     color: "#fff",
+    textAlign: "center",
     fontSize: 16,
   },
   button: {
     backgroundColor: "#00ff7f",
-    paddingVertical: 15,
+    paddingVertical: 12,
     width: "80%",
-    maxWidth: 400,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 15,
-    marginBottom: 20,
+    marginVertical: 12,
+    minHeight: 48,
   },
   buttonText: {
     color: "#1e1e1e",
