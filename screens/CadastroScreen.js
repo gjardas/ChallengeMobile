@@ -1,4 +1,3 @@
-// screens/CadastroScreen.js (CÓDIGO FINAL COM VAGA AUTOMÁTICA E VALIDAÇÕES)
 import React, { useState } from "react";
 import {
   View,
@@ -12,13 +11,13 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import HeaderCustom from "../components/HeaderCustom";
-import { createMoto, getMotos } from "../services/ApiService"; // getMotos necessário para a vaga automática
-import { saveVaga } from "../services/VagaService"; // Importe o serviço local de vagas
+import { createMoto, getMotos } from "../services/ApiService";
+import { saveVaga } from "../services/VagaService";
 import { useTheme } from "../contexts/themeContext";
+import i18n from "../services/i18n";
 
-const NUM_VAGAS = 20; // Defina o limite de vagas
+const NUM_VAGAS = 20;
 
-// Função utilitária para validação de placa
 const placaValida = (placa) => {
   const antiga = /^[A-Z]{3}[0-9]{4}$/i;
   const mercosul = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/i;
@@ -56,7 +55,7 @@ const createStyles = (theme) =>
       fontSize: 16,
     },
     erroTexto: {
-      color: "red",
+      color: theme.colors.error,
       marginBottom: 10,
       fontSize: 14,
       textAlign: "center",
@@ -97,12 +96,10 @@ export default function CadastroScreen({ navigation }) {
     try {
       const motos = await getMotos();
 
-      // Criamos um mapa local das vagas ocupadas usando o campo 'vaga' retornado pela API
       const vagasOcupadas = new Set(
         motos.map((m) => parseInt(m.vaga)).filter((v) => !isNaN(v) && v > 0)
       );
 
-      // Tentamos encontrar o primeiro número livre
       for (let i = 1; i <= NUM_VAGAS; i++) {
         if (!vagasOcupadas.has(i)) {
           return i;
@@ -110,7 +107,6 @@ export default function CadastroScreen({ navigation }) {
       }
       return null;
     } catch (error) {
-      // Em caso de falha da API, retornamos null
       return null;
     }
   };
@@ -118,13 +114,12 @@ export default function CadastroScreen({ navigation }) {
   const salvar = async () => {
     setErro("");
 
-    // 1. VALIDAÇÕES COMPLETAS (Critério 1.c)
     if (!placa.trim()) {
-      setErro("Informe a placa da moto.");
+      setErro(i18n.t("motorcycle.fillPlate"));
       return;
     }
     if (!placaValida(placa)) {
-      setErro("Formato da placa inválido. Use ABC1234 ou ABC1D23.");
+      setErro(i18n.t("motorcycle.invalidPlate"));
       return;
     }
     const anoNum = parseInt(ano);
@@ -133,17 +128,16 @@ export default function CadastroScreen({ navigation }) {
       anoNum < 1900 ||
       anoNum > new Date().getFullYear() + 1
     ) {
-      setErro("Ano inválido.");
+      setErro(i18n.t("motorcycle.invalidYear"));
       return;
     }
 
     setIsLoading(true);
 
-    // 2. LÓGICA DE ALOCAÇÃO AUTOMÁTICA
     const vagaEncontrada = await encontrarProximaVagaLivre();
 
     if (vagaEncontrada === null) {
-      setErro(`Todas as ${NUM_VAGAS} vagas estão ocupadas.`);
+      setErro(i18n.t("parking.allSpotsOccupied", { total: NUM_VAGAS }));
       setIsLoading(false);
       return;
     }
@@ -155,32 +149,24 @@ export default function CadastroScreen({ navigation }) {
         ano: anoNum,
         status: status.trim() || "ATIVO",
         observacoes: observacoes.trim(),
-        // Enviamos a vaga, esperando que a API persista.
         vaga: vagaEncontrada,
       };
 
-      // 3. ENVIA OS DADOS PARA A API
       await createMoto(novaMotoData);
 
-      // 4. WORKAROUND: SALVA A VAGA NO STORAGE LOCAL PARA GARANTIR O MAPA
       await saveVaga(novaMotoData.placa, vagaEncontrada);
 
-      // Limpa formulário após sucesso
       setPlaca("");
       setModelo("");
       setAno("");
       setStatus("");
       setObservacoes("");
 
-      Alert.alert(
-        "Sucesso",
-        `Moto cadastrada automaticamente na vaga ${vagaEncontrada}!`
-      );
-      // Navega para a lista para ver a moto cadastrada
+      Alert.alert(i18n.t("common.success"), i18n.t("motorcycle.saveSuccess"));
       navigation.navigate("Lista");
     } catch (error) {
       console.error("Falha ao salvar moto:", error);
-      setErro(error.response?.data?.message || "Erro ao cadastrar a moto.");
+      setErro(error.response?.data?.message || i18n.t("motorcycle.saveError"));
     } finally {
       setIsLoading(false);
     }
@@ -190,45 +176,47 @@ export default function CadastroScreen({ navigation }) {
     <View style={styles.screenContainer}>
       <HeaderCustom navigation={navigation} />
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Cadastro de Moto</Text>
+        <Text style={styles.title}>
+          {i18n.t("motorcycle.registerMotorcycle")}
+        </Text>
 
         <TextInput
-          placeholder="Placa"
+          placeholder={i18n.t("motorcycle.plate")}
           style={styles.input}
           value={placa}
           onChangeText={(text) => setPlaca(text.toUpperCase())}
-          placeholderTextColor="#7f7f7f"
+          placeholderTextColor={theme.colors.tertiary}
           autoCapitalize="characters"
           maxLength={7}
         />
         <TextInput
-          placeholder="Modelo"
+          placeholder={i18n.t("motorcycle.model")}
           style={styles.input}
           value={modelo}
           onChangeText={setModelo}
-          placeholderTextColor="#7f7f7f"
+          placeholderTextColor={theme.colors.tertiary}
         />
         <TextInput
-          placeholder="Ano"
+          placeholder={i18n.t("motorcycle.year")}
           style={styles.input}
           value={ano}
           onChangeText={setAno}
-          placeholderTextColor="#7f7f7f"
+          placeholderTextColor={theme.colors.tertiary}
           keyboardType="numeric"
         />
         <TextInput
-          placeholder="Status"
+          placeholder={i18n.t("motorcycle.status")}
           style={styles.input}
           value={status}
           onChangeText={setStatus}
-          placeholderTextColor="#7f7f7f"
+          placeholderTextColor={theme.colors.tertiary}
         />
         <TextInput
-          placeholder="Observações"
+          placeholder={i18n.t("motorcycle.observations")}
           style={styles.input}
           value={observacoes}
           onChangeText={setObservacoes}
-          placeholderTextColor="#7f7f7f"
+          placeholderTextColor={theme.colors.tertiary}
         />
 
         {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
@@ -238,9 +226,9 @@ export default function CadastroScreen({ navigation }) {
           disabled={isLoading}
         >
           {isLoading ? (
-            <ActivityIndicator size="small" color="#1e1e1e" />
+            <ActivityIndicator size="small" color={theme.colors.text} />
           ) : (
-            <Text style={styles.buttonText}>Salvar</Text>
+            <Text style={styles.buttonText}>{i18n.t("common.save")}</Text>
           )}
         </TouchableOpacity>
       </ScrollView>

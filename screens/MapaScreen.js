@@ -13,6 +13,7 @@ import { getMotos } from "../services/ApiService";
 import { loadVagasMap } from "../services/VagaService";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../contexts/themeContext";
+import i18n from "../services/i18n";
 
 const NUM_VAGAS = 20;
 
@@ -89,24 +90,19 @@ export default function MapaScreen({ navigation }) {
   const carregarStatusVagas = async () => {
     setIsLoading(true);
     try {
-      // 1. Pega todas as motos da API
       const motosAPI = await getMotos();
 
-      // 2. Pega o mapeamento Placa -> Vaga do Storage Local (WORKAROUND)
       const vagasMap = await loadVagasMap();
 
       const novoStatusVagas = Array(NUM_VAGAS).fill(null);
 
-      // 3. Combina os dados: Mapeia as motos da API para as vagas do Storage Local
       motosAPI.forEach((moto) => {
         const placa = moto.placa;
 
-        // Busca o número da vaga no mapa local, usando a Placa como chave
         const vagaNumStr = vagasMap[placa];
         const numeroVaga = parseInt(vagaNumStr);
 
         if (!isNaN(numeroVaga) && numeroVaga > 0 && numeroVaga <= NUM_VAGAS) {
-          // Marca a vaga com o objeto moto (e o número da vaga)
           novoStatusVagas[numeroVaga - 1] = { ...moto, vaga: numeroVaga };
         }
       });
@@ -115,8 +111,8 @@ export default function MapaScreen({ navigation }) {
     } catch (error) {
       console.error("Falha ao carregar vagas:", error);
       Alert.alert(
-        "Erro de API",
-        "Não foi possível carregar o mapa de vagas. Verifique o login ou a conexão."
+        i18n.t("common.apiError"),
+        i18n.t("parking.errorLoadingParkingMap")
       );
       setVagas(Array(NUM_VAGAS).fill(null));
     } finally {
@@ -135,10 +131,12 @@ export default function MapaScreen({ navigation }) {
     return vagas.map((moto, index) => {
       const vagaOcupada = !!moto;
       const numero = index + 1;
-      const statusText = vagaOcupada ? moto.placa : "LIVRE";
+      const statusText = vagaOcupada ? moto.placa : i18n.t("parking.free");
       const statusDetail = vagaOcupada
-        ? `Modelo: ${moto.modelo || "N/A"}`
-        : "Estacionar aqui";
+        ? `${i18n.t("motorcycle.model")}: ${
+            moto.modelo || i18n.t("common.notAvailable")
+          }`
+        : i18n.t("parking.parkHere");
       const style = vagaOcupada ? styles.vagaOcupada : styles.vagaLivre;
       const icon = vagaOcupada
         ? "close-circle-outline"
@@ -152,7 +150,9 @@ export default function MapaScreen({ navigation }) {
               size={24}
               color={vagaOcupada ? theme.colors.error : theme.colors.success}
             />
-            <Text style={styles.vagaNumero}>VAGA {numero}</Text>
+            <Text style={styles.vagaNumero}>
+              {i18n.t("parking.spot")} {numero}
+            </Text>
           </View>
           <Text style={styles.vagaStatus}>{statusText}</Text>
           <Text style={styles.vagaDetail}>{statusDetail}</Text>
@@ -163,12 +163,15 @@ export default function MapaScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <HeaderCustom navigation={navigation} title="Mapa de Vagas" />
+      <HeaderCustom
+        navigation={navigation}
+        title={i18n.t("parking.parkingMap")}
+      />
 
       <View style={styles.container}>
         <Text style={styles.title}>
-          Mapa de Vagas - {vagas.filter((v) => v).length} Ocupadas de{" "}
-          {NUM_VAGAS}
+          {i18n.t("parking.parkingMap")} - {vagas.filter((v) => v).length}{" "}
+          {i18n.t("parking.occupied")} {i18n.t("common.of")} {NUM_VAGAS}
         </Text>
 
         {isLoading ? (

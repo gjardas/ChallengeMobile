@@ -54,7 +54,7 @@ const createStyles = (theme) =>
       fontSize: 18,
     },
     errorText: {
-      color: "#ff4d4d",
+      color: theme.colors.error,
       marginBottom: 15,
       fontSize: 14,
       textAlign: "center",
@@ -126,7 +126,7 @@ export default function CadastroUsuarioScreen() {
       <TextInput
         style={styles.input}
         placeholder="E-mail"
-        placeholderTextColor="#7f7f7f"
+        placeholderTextColor={theme.colors.tertiary}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -136,7 +136,7 @@ export default function CadastroUsuarioScreen() {
       <TextInput
         style={styles.input}
         placeholder="Senha (Mínimo 6 caracteres)"
-        placeholderTextColor="#7f7f7f"
+        placeholderTextColor={theme.colors.tertiary}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -145,7 +145,7 @@ export default function CadastroUsuarioScreen() {
       <TextInput
         style={styles.input}
         placeholder="Confirmar Senha"
-        placeholderTextColor="#7f7f7f"
+        placeholderTextColor={theme.colors.tertiary}
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
@@ -157,7 +157,7 @@ export default function CadastroUsuarioScreen() {
         disabled={isLoading}
       >
         {isLoading ? (
-          <ActivityIndicator size="small" color="#1e1e1e" />
+          <ActivityIndicator size="small" color={theme.colors.text} />
         ) : (
           <Text style={styles.buttonText}>Cadastrar</Text>
         )}

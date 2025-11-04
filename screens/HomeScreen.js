@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import HeaderCustom from "../components/HeaderCustom";
 import { useTheme } from "../contexts/themeContext";
+import i18n from "../services/i18n";
 
 const createStyles = (theme) =>
   StyleSheet.create({
@@ -55,32 +56,34 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.screenContainer}>
       <HeaderCustom navigation={{ ...navigation, showBack: false }} />
 
-      <Text style={styles.title}>Gestão de Vagas e Motos - Mottu</Text>
+      <Text style={styles.title}>{i18n.t("menu.appTitle")}</Text>
 
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("Cadastro")}
         >
-          <Text style={styles.buttonText}>Cadastrar Moto</Text>
+          <Text style={styles.buttonText}>
+            {i18n.t("menu.registerMotorcycle")}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("Lista")}
         >
-          <Text style={styles.buttonText}>Lista de Motos</Text>
+          <Text style={styles.buttonText}>{i18n.t("menu.motorcycleList")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("Mapa")}
         >
-          <Text style={styles.buttonText}>Mapa de Vagas</Text>
+          <Text style={styles.buttonText}>{i18n.t("menu.parkingMap")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate("Sobre")}
         >
-          <Text style={styles.buttonText}>Sobre</Text>
+          <Text style={styles.buttonText}>{i18n.t("menu.about")}</Text>
         </TouchableOpacity>
       </View>
     </View>

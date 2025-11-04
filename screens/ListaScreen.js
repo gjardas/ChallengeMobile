@@ -13,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import HeaderCustom from "../components/HeaderCustom";
 import { getMotos, deleteMoto } from "../services/ApiService";
 import { useTheme } from "../contexts/themeContext";
+import i18n from "../services/i18n";
 
 const createStyles = (theme) =>
   StyleSheet.create({
@@ -55,7 +56,7 @@ const createStyles = (theme) =>
       marginRight: 5,
     },
     deleteButton: {
-      backgroundColor: "#d9534f",
+      backgroundColor: theme.colors.error,
       paddingVertical: 12,
       paddingHorizontal: 20,
       borderRadius: 8,
@@ -87,7 +88,7 @@ export default function ListaScreen() {
       setMotos(data || []);
     } catch (error) {
       console.error("Falha ao carregar motos:", error);
-      Alert.alert("Erro", "Não foi possível carregar a lista de motos.");
+      Alert.alert(i18n.t("common.error"), i18n.t("motorcycle.loadError"));
       setMotos([]);
     } finally {
       setIsLoading(false);
@@ -98,25 +99,25 @@ export default function ListaScreen() {
     console.log("Excluindo moto com ID:", id);
     try {
       await deleteMoto(id);
-      Alert.alert("Sucesso", "Moto excluída com sucesso.");
+      Alert.alert(i18n.t("common.success"), i18n.t("motorcycle.deleteSuccess"));
       carregarMotos();
     } catch (error) {
       console.error("Falha ao excluir a moto:", error);
-      Alert.alert("Erro", "Não foi possível excluir a moto.");
+      Alert.alert(i18n.t("common.error"), i18n.t("motorcycle.deleteError"));
     }
   };
 
   const confirmarExclusao = (placa) => {
     Alert.alert(
-      "Confirmação",
-      `Tem certeza que deseja excluir a moto com a placa ${placa}?`,
+      i18n.t("common.confirm"),
+      i18n.t("motorcycle.deleteConfirm", { plate: placa }),
       [
         {
-          text: "Cancelar",
+          text: i18n.t("common.cancel"),
           style: "cancel",
         },
         {
-          text: "Excluir",
+          text: i18n.t("common.delete"),
           onPress: () => excluirMoto(placa),
           style: "destructive",
         },
@@ -134,26 +135,34 @@ export default function ListaScreen() {
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <View style={styles.itemTextContainer}>
-        <Text style={styles.itemTitle}>Placa: {item.placa}</Text>
-        <Text style={styles.itemSubtitle}>Modelo: {item.modelo}</Text>
-        <Text style={styles.itemSubtitle}>Ano: {item.ano}</Text>
-        <Text style={styles.itemSubtitle}>
-          RFID: {item.rfidTag || item.rfid}
+        <Text style={styles.itemTitle}>
+          {i18n.t("motorcycle.plate")}: {item.placa}
         </Text>
-        <Text style={styles.itemSubtitle}>Status: {item.status || "N/A"}</Text>
+        <Text style={styles.itemSubtitle}>
+          {i18n.t("motorcycle.model")}: {item.modelo}
+        </Text>
+        <Text style={styles.itemSubtitle}>
+          {i18n.t("motorcycle.year")}: {item.ano}
+        </Text>
+        <Text style={styles.itemSubtitle}>
+          {i18n.t("motorcycle.rfid")}: {item.rfidTag || item.rfid}
+        </Text>
+        <Text style={styles.itemSubtitle}>
+          {i18n.t("motorcycle.status")}: {item.status || "N/A"}
+        </Text>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.editButton}
           onPress={() => navigation.navigate("Editar", { moto: item })}
         >
-          <Ionicons name="create-outline" size={24} color="#1e1e1e" />
+          <Ionicons name="create-outline" size={24} color={theme.colors.text} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={() => confirmarExclusao(item.id)}
         >
-          <Ionicons name="trash-outline" size={24} color="#1e1e1e" />
+          <Ionicons name="trash-outline" size={24} color={theme.colors.text} />
         </TouchableOpacity>
       </View>
     </View>
@@ -161,7 +170,10 @@ export default function ListaScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <HeaderCustom navigation={navigation} title="Lista de Motos" />
+      <HeaderCustom
+        navigation={navigation}
+        title={i18n.t("motorcycle.motorcycleList")}
+      />
       <View style={styles.container}>
         {isLoading ? (
           <ActivityIndicator size="large" color={theme.colors.primary} />
@@ -180,7 +192,9 @@ export default function ListaScreen() {
               motos.length === 0 ? styles.noMotosContainer : null
             }
             ListEmptyComponent={() => (
-              <Text style={styles.noMotosText}>Nenhuma moto cadastrada.</Text>
+              <Text style={styles.noMotosText}>
+                {i18n.t("motorcycle.noMotorcycles")}
+              </Text>
             )}
           />
         )}

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import HeaderCustom from "../components/HeaderCustom";
 import { useTheme } from "../contexts/themeContext";
+import i18n from "../services/i18n";
 
 const createStyles = (theme) =>
   StyleSheet.create({
@@ -79,23 +80,19 @@ export default function SobreScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <HeaderCustom navigation={navigation} title="Sobre" />
+      <HeaderCustom navigation={navigation} title={i18n.t("menu.about")} />
 
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.integrantes}>Sobre o projeto</Text>
+        <Text style={styles.integrantes}>{i18n.t("about.aboutTitle")}</Text>
         <Text style={styles.texto}>
-          Este aplicativo foi desenvolvido para oferecer uma solução prática e
-          eficiente para o gerenciamento de vagas de estacionamento de motos,
-          utilizando tecnologia RFID para identificar e controlar os veículos.
-          Através do app, é possível cadastrar motos com seus dados essenciais,
-          visualizar uma lista organizada das motos cadastradas e acompanhar, em
-          tempo real, o mapa das vagas ocupadas no estacionamento.
-          {
-            "\n\nO sistema facilita a administração do espaço, permitindo que os responsáveis saibam exatamente quais vagas estão livres ou ocupadas, otimizando a utilização do local e evitando conflitos ou confusões. A interface intuitiva e o uso de armazenamento local garantem que os dados estejam sempre disponíveis, mesmo sem conexão à internet.\n\nCom foco na segurança e praticidade, este projeto traz uma inovação tecnológica para o controle de acesso e monitoramento de veículos, proporcionando uma experiência mais ágil e confiável tanto para os gestores quanto para os usuários do estacionamento."
-          }
+          {i18n.t("about.aboutText")}
+          {"\n\n"}
+          {i18n.t("about.aboutText2")}
+          {"\n\n"}
+          {i18n.t("about.aboutText3")}
         </Text>
 
-        <Text style={styles.title}>Integrantes</Text>
+        <Text style={styles.title}>{i18n.t("about.members")}</Text>
         <View style={styles.imageRow}>
           <View style={styles.imageContainer}>
             <Image
@@ -103,7 +100,9 @@ export default function SobreScreen({ navigation }) {
               style={styles.image}
               resizeMode="contain"
             />
-            <Text style={styles.imageCaption}>Guilherme Jardim RM556814</Text>
+            <Text style={styles.imageCaption}>
+              {i18n.t("about.memberGuilherme")}
+            </Text>
           </View>
 
           <View style={styles.imageContainer}>
@@ -112,7 +111,9 @@ export default function SobreScreen({ navigation }) {
               style={styles.image}
               resizeMode="contain"
             />
-            <Text style={styles.imageCaption}>Fernando RM555317</Text>
+            <Text style={styles.imageCaption}>
+              {i18n.t("about.memberFernando")}
+            </Text>
           </View>
         </View>
       </ScrollView>

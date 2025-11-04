@@ -56,7 +56,7 @@ Sistema mobile para gerenciamento de motos e vagas de estacionamento desenvolvid
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/[seu-usuario]/ChallengeMobile.git
+git clone https://github.com/gjardas/ChallengeMobile.git
 ```
 
 2. Entre na pasta do projeto:
@@ -238,8 +238,8 @@ O aplicativo suporta dois temas que podem ser alternados no menu:
 
 ## ✍️ Autores
 
-- Guilherme Jardim (RM556814)
-- Fernando (RM555317)
+- Guilherme Jardim (RM556814) Github: https://github.com/gjardas
+- Fernando Fontes (RM555317) Github: https://github.com/xfnd25
 
 ## 📝 Notas de Versão
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,9 +10,25 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { login } from "../services/AuthServices";
 import { useTheme } from "../contexts/themeContext";
+import i18n, { changeLanguage, getCurrentLanguage } from "../services/i18n";
 
 const createStyles = (theme) =>
   StyleSheet.create({
+    languageButton: {
+      position: "absolute",
+      top: 20,
+      right: 20,
+      backgroundColor: theme.colors.surface,
+      padding: 10,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+    },
+    languageButtonText: {
+      color: theme.colors.primary,
+      fontSize: 16,
+      fontWeight: "bold",
+    },
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
@@ -53,7 +69,7 @@ const createStyles = (theme) =>
       fontSize: 18,
     },
     errorText: {
-      color: "#ff4d4d",
+      color: theme.colors.error,
       marginBottom: 15,
       fontSize: 14,
       textAlign: "center",
@@ -72,13 +88,20 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [currentLanguage, setCurrentLanguage] = useState(getCurrentLanguage());
   const styles = createStyles(theme);
+
+  const toggleLanguage = async () => {
+    const newLanguage = currentLanguage === "pt" ? "es" : "pt";
+    await changeLanguage(newLanguage);
+    setCurrentLanguage(newLanguage);
+  };
 
   const handleLogin = async () => {
     setError("");
 
     if (!email || !password) {
-      setError("Por favor, preencha todos os campos.");
+      setError("auth.emptyFields");
       return;
     }
 
@@ -88,16 +111,16 @@ export default function LoginScreen() {
       await login(email, password);
       navigation.navigate("Início");
     } catch (firebaseError) {
-      let errorMessage = "Falha no login. Verifique suas credenciais.";
+      let errorMessage = "auth.loginError";
 
       if (firebaseError.code === "auth/invalid-email") {
-        errorMessage = "O formato do e-mail é inválido.";
+        errorMessage = "auth.invalidEmail";
       } else if (
         firebaseError.code === "auth/invalid-credential" ||
         firebaseError.code === "auth/wrong-password" ||
         firebaseError.code === "auth/user-not-found"
       ) {
-        errorMessage = "E-mail ou senha incorretos.";
+        errorMessage = "auth.invalidCredentials";
       }
 
       setError(errorMessage);
@@ -108,15 +131,20 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      {/* <HeaderCustom navigation={{...navigation, showBack: false}} /> */}
-      <Text style={styles.title}>Acesso MOTTU</Text>
+      <TouchableOpacity style={styles.languageButton} onPress={toggleLanguage}>
+        <Text style={styles.languageButtonText}>
+          {currentLanguage.toUpperCase()}
+        </Text>
+      </TouchableOpacity>
 
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      <Text style={styles.title}>{i18n.t("common.appName")}</Text>
+
+      {error ? <Text style={styles.errorText}>{i18n.t(error)}</Text> : null}
 
       <TextInput
         style={styles.input}
-        placeholder="E-mail"
-        placeholderTextColor="#7f7f7f"
+        placeholder={i18n.t("auth.email")}
+        placeholderTextColor={theme.colors.tertiary}
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -125,8 +153,8 @@ export default function LoginScreen() {
 
       <TextInput
         style={styles.input}
-        placeholder="Senha"
-        placeholderTextColor="#7f7f7f"
+        placeholder={i18n.t("auth.password")}
+        placeholderTextColor={theme.colors.tertiary}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -138,14 +166,14 @@ export default function LoginScreen() {
         disabled={isLoading}
       >
         {isLoading ? (
-          <ActivityIndicator size="small" color="#1e1e1e" />
+          <ActivityIndicator size="small" color={theme.colors.text} />
         ) : (
-          <Text style={styles.buttonText}>Entrar</Text>
+          <Text style={styles.buttonText}>{i18n.t("auth.login")}</Text>
         )}
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate("CadastroUsuario")}>
-        <Text style={styles.linkText}>Não tem conta? Cadastre-se.</Text>
+        <Text style={styles.linkText}>{i18n.t("auth.dontHaveAccount")}</Text>
       </TouchableOpacity>
     </View>
   );

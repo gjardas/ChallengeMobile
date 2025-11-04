@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AuthContext } from "../services/AuthContext";
 import { useTheme } from "../contexts/themeContext";
+import i18n from "../services/i18n";
 
 export default function HeaderCustom({ navigation }) {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -25,10 +26,10 @@ export default function HeaderCustom({ navigation }) {
 
   const handleLogout = () => {
     setMenuVisible(false);
-    Alert.alert("Sair", "Você tem certeza que deseja fazer logout?", [
-      { text: "Cancelar", style: "cancel" },
+    Alert.alert(i18n.t("auth.logout"), i18n.t("common.logoutConfirm"), [
+      { text: i18n.t("common.cancel"), style: "cancel" },
       {
-        text: "Sair",
+        text: i18n.t("auth.logout"),
         onPress: async () => {
           if (logout) await logout();
           if (navigation && navigation.navigate) {
@@ -40,7 +41,6 @@ export default function HeaderCustom({ navigation }) {
     ]);
   };
 
-  // Permitir esconder botão voltar via prop
   const showBack =
     typeof navigation?.showBack === "boolean" ? navigation.showBack : true;
   const canGoBack =
@@ -54,18 +54,18 @@ export default function HeaderCustom({ navigation }) {
             onPress={() => navigation.navigate("Início")}
             style={styles.backButton}
           >
-            <Text style={styles.backText}>← Voltar</Text>
+            <Text style={styles.backText}>{i18n.t("common.back")}</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.backPlaceholder} />
         )}
 
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>MOTTU</Text>
+          <Text style={styles.titleText}>{i18n.t("common.brand")}</Text>
         </View>
 
         <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
-          <Text style={styles.menuButtonText}>☰ Menu</Text>
+          <Text style={styles.menuButtonText}>{i18n.t("common.menu")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -75,35 +75,39 @@ export default function HeaderCustom({ navigation }) {
             onPress={() => navigateTo("Início")}
             style={styles.menuItem}
           >
-            <Text style={styles.menuText}>Início</Text>
+            <Text style={styles.menuText}>{i18n.t("menu.home")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigateTo("Cadastro")}
             style={styles.menuItem}
           >
-            <Text style={styles.menuText}>Cadastrar Moto</Text>
+            <Text style={styles.menuText}>
+              {i18n.t("menu.registerMotorcycle")}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigateTo("Lista")}
             style={styles.menuItem}
           >
-            <Text style={styles.menuText}>Lista de Motos</Text>
+            <Text style={styles.menuText}>{i18n.t("menu.motorcycleList")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigateTo("Mapa")}
             style={styles.menuItem}
           >
-            <Text style={styles.menuText}>Mapa de Vagas</Text>
+            <Text style={styles.menuText}>{i18n.t("menu.parkingMap")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigateTo("Sobre")}
             style={styles.menuItem}
           >
-            <Text style={styles.menuText}>Sobre</Text>
+            <Text style={styles.menuText}>{i18n.t("menu.about")}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={toggleTheme} style={styles.menuItem}>
             <Text style={styles.menuText}>
-              {mode === "light" ? "Ativar tema escuro" : "Ativar tema claro"}
+              {mode === "light"
+                ? i18n.t("common.theme.toggleDark")
+                : i18n.t("common.theme.toggleLight")}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -111,7 +115,7 @@ export default function HeaderCustom({ navigation }) {
             style={[styles.menuItem, styles.logoutItem]}
           >
             <Text style={[styles.menuText, styles.logoutText]}>
-              Sair (Logout)
+              {i18n.t("common.logout")}
             </Text>
           </TouchableOpacity>
         </View>
