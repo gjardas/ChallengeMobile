@@ -40,7 +40,18 @@
     "portuguese": "Portugués",
     "spanish": "Español",
     "profile": "Perfil",
-    "help": "Ayuda"
+    "help": "Ayuda",
+    "testNotification": "Probar Notificación Local"
+  },
+  "notification": {
+    "testTitle": "Notificación de Prueba 🛵",
+    "testBody": "¡Esto simula un recordatorio o la creación de una nueva moto!",
+    "motoCreatedTitle": "¡Moto Registrada! 🛵",
+    "motoCreatedBody": "La moto con matrícula {{placa}} ha sido registrada con éxito.",
+    "motoUpdatedTitle": "¡Moto Actualizada! 🔧",
+    "motoUpdatedBody": "Los datos de la moto con matrícula {{placa}} han sido actualizados.",
+    "motoDeletedTitle": "¡Moto Eliminada! 🗑️",
+    "motoDeletedBody": "La moto con matrícula {{placa}} ha sido eliminada del sistema."
   },
   "auth": {
     "login": "Iniciar sesión",

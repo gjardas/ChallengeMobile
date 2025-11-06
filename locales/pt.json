@@ -13,7 +13,6 @@
     "error": "Erro",
     "success": "Sucesso",
     "confirm": "Confirmar",
-    "back": "Voltar",
     "apiError": "Erro de API",
     "available": "LIVRE",
     "notAvailable": "N/A",
@@ -42,7 +41,18 @@
     "portuguese": "Português",
     "spanish": "Espanhol",
     "profile": "Perfil",
-    "help": "Ajuda"
+    "help": "Ajuda",
+    "testNotification": "Testar Notificação Local"
+  },
+  "notification": {
+    "testTitle": "Notificação de Teste 🛵",
+    "testBody": "Isto simula um lembrete ou a criação de uma nova moto!",
+    "motoCreatedTitle": "Moto Cadastrada! 🛵",
+    "motoCreatedBody": "A moto placa {{placa}} foi cadastrada com sucesso.",
+    "motoUpdatedTitle": "Moto Atualizada! 🔧",
+    "motoUpdatedBody": "Os dados da moto placa {{placa}} foram atualizados.",
+    "motoDeletedTitle": "Moto Excluída! 🗑️",
+    "motoDeletedBody": "A moto placa {{placa}} foi removida do sistema."
   },
   "auth": {
     "login": "Entrar",

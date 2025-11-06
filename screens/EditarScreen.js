@@ -13,6 +13,8 @@ import HeaderCustom from "../components/HeaderCustom";
 import { updateMoto } from "../services/ApiService";
 import { useTheme } from "../contexts/themeContext";
 import i18n from "../services/i18n";
+// 1. Importar notificação
+import { sendLocalNotification } from "../services/NotificationService";
 
 const createStyles = (theme) =>
   StyleSheet.create({
@@ -101,6 +103,14 @@ export default function EditarScreen() {
     setIsLoading(true);
     try {
       await updateMoto(motoId, { placa, modelo, ano, status, observacoes });
+
+      // --- 2. ENVIAR NOTIFICAÇÃO DE SUCESSO ---
+      sendLocalNotification(
+        i18n.t("notification.motoUpdatedTitle"),
+        i18n.t("notification.motoUpdatedBody", { placa: placa })
+      );
+      // ------------------------------------
+
       Alert.alert(i18n.t("common.success"), i18n.t("motorcycle.updateSuccess"));
       navigation.goBack();
     } catch (error) {

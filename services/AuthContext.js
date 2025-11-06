@@ -5,6 +5,9 @@ import { logout } from "./AuthServices.js";
 import { setAuthToken } from "./ApiService";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
 
+// --- 1. IMPORTAR A NOVA FUNÇÃO ---
+import { askNotificationPermission } from "./NotificationService";
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -14,9 +17,20 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const subscriber = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
       if (user) {
+        // Usuário está logado
         const token = await user.getIdToken();
         setAuthToken(token);
+
+        // --- 2. APENAS PEDIR A PERMISSÃO NO LOGIN ---
+        // Não vamos mais pedir o Push Token
+        try {
+          await askNotificationPermission();
+        } catch (e) {
+          console.error("Falha ao pedir permissão de notificação:", e);
+        }
+        // ----------------------------------------------------
       } else {
+        // Usuário está deslogado
         setAuthToken(null);
       }
       setUser(user);

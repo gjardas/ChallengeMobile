@@ -15,6 +15,8 @@ import { createMoto, getMotos } from "../services/ApiService";
 import { saveVaga } from "../services/VagaService";
 import { useTheme } from "../contexts/themeContext";
 import i18n from "../services/i18n";
+// 1. Importar notificação
+import { sendLocalNotification } from "../services/NotificationService";
 
 const NUM_VAGAS = 20;
 
@@ -155,6 +157,13 @@ export default function CadastroScreen({ navigation }) {
       await createMoto(novaMotoData);
 
       await saveVaga(novaMotoData.placa, vagaEncontrada);
+
+      // --- 2. ENVIAR NOTIFICAÇÃO DE SUCESSO ---
+      sendLocalNotification(
+        i18n.t("notification.motoCreatedTitle"),
+        i18n.t("notification.motoCreatedBody", { placa: novaMotoData.placa })
+      );
+      // ------------------------------------
 
       setPlaca("");
       setModelo("");

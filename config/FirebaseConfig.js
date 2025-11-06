@@ -1,5 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+// 1. Importações atualizadas para persistência de login
+import {
+  getAuth,
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth";
+// 2. Importação do AsyncStorage
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAFgKdErjZgqNuCCZDndQNMH541X7Z6pzE",
@@ -14,4 +21,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-export const FIREBASE_AUTH = getAuth(app);
+// 3. Inicializa o Auth com persistência (AsyncStorage)
+// Isso corrige o aviso do console e faz o login persistir
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
+
+// 4. Exporta a instância de auth inicializada
+export const FIREBASE_AUTH = auth;

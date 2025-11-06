@@ -14,6 +14,8 @@ import HeaderCustom from "../components/HeaderCustom";
 import { getMotos, deleteMoto } from "../services/ApiService";
 import { useTheme } from "../contexts/themeContext";
 import i18n from "../services/i18n";
+// 1. Importar notificação
+import { sendLocalNotification } from "../services/NotificationService";
 
 const createStyles = (theme) =>
   StyleSheet.create({
@@ -95,10 +97,19 @@ export default function ListaScreen() {
     }
   };
 
-  const excluirMoto = async (id) => {
-    console.log("Excluindo moto com ID:", id);
+  // 2. ATUALIZAR 'excluirMoto' PARA ACEITAR A PLACA
+  const excluirMoto = async (id, placa) => {
+    console.log("Excluindo moto com ID:", id, "Placa:", placa);
     try {
       await deleteMoto(id);
+
+      // 3. ENVIAR NOTIFICAÇÃO DE SUCESSO
+      sendLocalNotification(
+        i18n.t("notification.motoDeletedTitle"),
+        i18n.t("notification.motoDeletedBody", { placa: placa })
+      );
+      // ---------------------------------
+
       Alert.alert(i18n.t("common.success"), i18n.t("motorcycle.deleteSuccess"));
       carregarMotos();
     } catch (error) {
@@ -107,10 +118,11 @@ export default function ListaScreen() {
     }
   };
 
-  const confirmarExclusao = (placa) => {
+  // 4. ATUALIZAR 'confirmarExclusao' PARA ACEITAR ID E PLACA
+  const confirmarExclusao = (id, placa) => {
     Alert.alert(
       i18n.t("common.confirm"),
-      i18n.t("motorcycle.deleteConfirm", { plate: placa }),
+      i18n.t("motorcycle.deleteConfirm", { plate: placa }), // 'plate' deve ser 'placa' se o i18n usar 'placa'
       [
         {
           text: i18n.t("common.cancel"),
@@ -118,7 +130,8 @@ export default function ListaScreen() {
         },
         {
           text: i18n.t("common.delete"),
-          onPress: () => excluirMoto(placa),
+          // 5. Passar ambos os argumentos
+          onPress: () => excluirMoto(id, placa),
           style: "destructive",
         },
       ]
@@ -160,7 +173,8 @@ export default function ListaScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => confirmarExclusao(item.id)}
+          // 6. ATUALIZAR A CHAMADA 'onPress'
+          onPress={() => confirmarExclusao(item.id, item.placa)}
         >
           <Ionicons name="trash-outline" size={24} color={theme.colors.text} />
         </TouchableOpacity>
