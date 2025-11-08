@@ -9,6 +9,7 @@ Sistema mobile para gerenciamento de motos e vagas de estacionamento desenvolvid
 - Login seguro com e-mail e senha
 - Cadastro de novos usuários
 - Sistema de logout
+- Persistência de sessão
 
 ### Gestão de Motos
 
@@ -18,10 +19,12 @@ Sistema mobile para gerenciamento de motos e vagas de estacionamento desenvolvid
   - Ano
   - Status
   - Observações
+  - RFID (integração com sistema de identificação)
 - Listagem completa de motos cadastradas
 - Edição de informações
 - Exclusão de registros
 - Alocação automática de vagas
+- Sistema de notificações para ações importantes
 
 ### Mapa de Vagas
 
@@ -40,6 +43,8 @@ Sistema mobile para gerenciamento de motos e vagas de estacionamento desenvolvid
 - React Native Paper
 - Expo Vector Icons
 - AsyncStorage para persistência local
+- i18n-js para internacionalização
+- Expo Notifications para notificações locais
 
 ## 🛠️ Configuração do Ambiente
 
@@ -97,6 +102,32 @@ npm start
    - Para iOS: use `i` no terminal ou abra no Xcode
    - No dispositivo físico: escaneie o QR code com o Expo Go
 
+## 🌐 Internacionalização
+
+O aplicativo suporta múltiplos idiomas:
+
+### Português (pt-BR)
+
+- Idioma principal do aplicativo
+- Inclui todas as mensagens do sistema
+- Formatação de datas e números adequada
+
+### Espanhol (es)
+
+- Tradução completa da interface
+- Adaptação cultural de termos
+- Suporte a formatos regionais
+
+## 🔔 Sistema de Notificações
+
+O aplicativo inclui um sistema completo de notificações locais para:
+
+- Confirmação de cadastro de motos
+- Atualização de informações
+- Remoção de registros
+- Alertas do sistema
+- Lembretes importantes
+
 ## 📌 Estrutura do Projeto
 
 ```
@@ -128,9 +159,11 @@ ChallengeMobile/
 │   ├── EditarScreen
 │   └── SobreScreen
 ├── services/          # Serviços e APIs
-│   ├── ApiService    # Serviços de API
-│   ├── AuthServices  # Serviços de autenticação
-│   └── VagaService   # Serviços de gestão de vagas
+   ├── ApiService    # Serviços de API
+   ├── AuthServices  # Serviços de autenticação
+   ├── i18n         # Configuração de internacionalização
+   ├── NotificationService # Serviço de notificações
+   └── VagaService   # Serviços de gestão de vagas
 ├── themes/           # Configuração de temas
 │   └── theme.js     # Definição dos temas claro/escuro
 └── utils/           # Utilitários

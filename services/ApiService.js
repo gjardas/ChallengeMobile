@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// Verifique se este IP ainda é o correto para a sua máquina
 const API_URL = "http://192.168.1.128:8080/";
 
 const api = axios.create({
@@ -9,19 +10,25 @@ const api = axios.create({
   },
 });
 
+// --- ESTA É A FUNÇÃO CORRIGIDA ---
 export const setAuthToken = (token) => {
   if (token) {
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    console.log("Token set for API calls.");
-  } else {
+    // 1. Removemos o header "Authorization"
     delete api.defaults.headers.common["Authorization"];
-    console.log("Token removed for API calls.");
+
+    // 2. Adicionamos o header "X-API-KEY"
+    api.defaults.headers.common["X-API-KEY"] = token; // <-- SEM o "Bearer "
+    console.log("Token X-API-KEY set for API calls.");
+  } else {
+    delete api.defaults.headers.common["X-API-KEY"];
+    console.log("Token X-API-KEY removed for API calls.");
   }
 };
+// --- FIM DA CORREÇÃO ---
 
 export const getMotos = async () => {
   try {
-    const response = await api.get("/motos");
+    const response = await api.get("/api/motos"); // Adicionado /api
     return response.data.content;
   } catch (error) {
     console.error(
@@ -34,7 +41,7 @@ export const getMotos = async () => {
 
 export const createMoto = async (motoData) => {
   try {
-    const response = await api.post("/motos", motoData);
+    const response = await api.post("/api/motos", motoData); // Adicionado /api
     return response.data;
   } catch (error) {
     console.error("Erro ao criar moto:", error.response?.data || error.message);
@@ -45,7 +52,7 @@ export const createMoto = async (motoData) => {
 export const deleteMoto = async (id) => {
   try {
     console.log("Deleting moto with ID:", id);
-    await api.delete(`/motos/${id}`);
+    await api.delete(`/api/motos/${id}`); // Adicionado /api
   } catch (error) {
     console.error(
       "Erro ao deletar moto:",
@@ -57,7 +64,7 @@ export const deleteMoto = async (id) => {
 
 export const updateMoto = async (id, motoData) => {
   try {
-    const response = await api.put(`/motos/${id}`, motoData);
+    const response = await api.put(`/api/motos/${id}`, motoData); // Adicionado /api
     return response.data;
   } catch (error) {
     console.error(

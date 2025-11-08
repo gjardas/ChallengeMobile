@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react"; // Importe o useEffect
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Provider as PaperProvider } from "react-native-paper";
@@ -12,10 +12,23 @@ import EditarScreen from "./screens/EditarScreen";
 import LoginScreen from "./screens/LoginScreen";
 import CadastroUsuarioScreen from "./screens/CadastroUsuarioScreen";
 
+// Importe o setAuthToken
+import { setAuthToken } from "./services/ApiService";
+
 const Stack = createNativeStackNavigator();
+
+// Defina sua chave de API
+const SUA_API_KEY = "HlqyN5CN0oWvjaD82XPpr0tPvmSXrWyQ";
 
 function MainApp() {
   const { theme } = useTheme();
+
+  // Adicione o useEffect para definir a chave UMA VEZ
+  useEffect(() => {
+    console.log("APP.JS: Configurando a X-API-KEY global...");
+    setAuthToken(SUA_API_KEY);
+  }, []); // O array vazio [] garante que isso rode só uma vez.
+
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer theme={theme}>
@@ -25,6 +38,7 @@ function MainApp() {
           })}
           initialRouteName="Login"
         >
+          {/* A PARTIR DAQUI, SÓ PODE HAVER <Stack.Screen> */}
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen
             name="CadastroUsuario"

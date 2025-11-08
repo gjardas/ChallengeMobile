@@ -14,7 +14,6 @@ import HeaderCustom from "../components/HeaderCustom";
 import { getMotos, deleteMoto } from "../services/ApiService";
 import { useTheme } from "../contexts/themeContext";
 import i18n from "../services/i18n";
-// 1. Importar notificação
 import { sendLocalNotification } from "../services/NotificationService";
 
 const createStyles = (theme) =>

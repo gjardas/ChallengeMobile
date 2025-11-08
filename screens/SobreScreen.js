@@ -10,6 +10,7 @@ import {
 import HeaderCustom from "../components/HeaderCustom";
 import { useTheme } from "../contexts/themeContext";
 import i18n from "../services/i18n";
+import Constants from "expo-constants";
 
 const createStyles = (theme) =>
   StyleSheet.create({
@@ -72,6 +73,19 @@ const createStyles = (theme) =>
       width: "90%",
       alignSelf: "center",
     },
+    buildInfo: {
+      marginTop: 20,
+      paddingTop: 20,
+      borderTopWidth: 1,
+      borderTopColor: theme.colors.primary,
+      width: "90%",
+    },
+    buildText: {
+      fontSize: 14,
+      color: theme.colors.text,
+      textAlign: "center",
+      marginBottom: 8,
+    },
   });
 
 export default function SobreScreen({ navigation }) {
@@ -91,6 +105,17 @@ export default function SobreScreen({ navigation }) {
           {"\n\n"}
           {i18n.t("about.aboutText3")}
         </Text>
+
+        <View style={styles.buildInfo}>
+          <Text style={styles.buildText}>
+            {i18n.t("about.appVersion")}:{" "}
+            {Constants.expoConfig?.version || "N/A"}
+          </Text>
+          <Text style={styles.buildText}>
+            {i18n.t("about.commitHash")}:{" "}
+            {Constants.expoConfig?.extra?.commitHash || "N/A"}
+          </Text>
+        </View>
 
         <Text style={styles.title}>{i18n.t("about.members")}</Text>
         <View style={styles.imageRow}>

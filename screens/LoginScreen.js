@@ -8,9 +8,12 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { login } from "../services/AuthServices";
+import { login } from "../services/AuthServices"; // Autenticação do Firebase
+// import { setAuthToken } from "../services/ApiService"; // <-- REMOVIDO
 import { useTheme } from "../contexts/themeContext";
 import i18n, { changeLanguage, getCurrentLanguage } from "../services/i18n";
+
+// const SUA_API_KEY = "xxxxx"; // <-- REMOVIDO
 
 const createStyles = (theme) =>
   StyleSheet.create({
@@ -95,6 +98,7 @@ export default function LoginScreen() {
     const newLanguage = currentLanguage === "pt" ? "es" : "pt";
     await changeLanguage(newLanguage);
     setCurrentLanguage(newLanguage);
+    a;
   };
 
   const handleLogin = async () => {
@@ -108,7 +112,12 @@ export default function LoginScreen() {
     setIsLoading(true);
 
     try {
+      // Passo 1: Autentica no Firebase (Entra no "prédio")
       await login(email, password);
+
+      // setAuthToken(SUA_API_KEY); // <-- REMOVIDO
+
+      // Passo 2: Agora navega para a tela principal
       navigation.navigate("Início");
     } catch (firebaseError) {
       let errorMessage = "auth.loginError";

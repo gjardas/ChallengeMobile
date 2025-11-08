@@ -115,6 +115,10 @@
     "aboutText2": "El sistema facilita la administración del espacio, permitiendo que los responsables sepan exactamente qué espacios están libres u ocupados, optimizando el uso del local y evitando conflictos o confusiones. La interfaz intuitiva y el uso de almacenamiento local garantizan que los datos estén siempre disponibles, incluso sin conexión a internet.",
     "aboutText3": "Con enfoque en la seguridad y practicidad, este proyecto trae una innovación tecnológica para el control de acceso y monitoreo de vehículos, proporcionando una experiencia más ágil y confiable tanto para los gestores como para los usuarios del estacionamiento.",
     "memberGuilherme": "Guilherme Jardim RM556814",
-    "memberFernando": "Fernando RM555317"
+    "memberFernando": "Fernando RM555317",
+    "buildVersion": "Versión de Build",
+    "appVersion": "Versión de la App",
+    "commitHash": "Hash de Commit",
+    "buildInfo": "Información de Build"
   }
 }

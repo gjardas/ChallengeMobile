@@ -44,7 +44,8 @@
     "extra": {
       "eas": {
         "projectId": "4f3d6215-a671-4093-87e4-24a3cc254436"
-      }
+      },
+      "commitHash": "8c14c82"
     },
     "owner": "gjardas"
   }
