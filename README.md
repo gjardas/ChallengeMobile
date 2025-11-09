@@ -269,6 +269,41 @@ O aplicativo suporta dois temas que podem ser alternados no menu:
 - Mapeamento de vagas
 - Melhor performance offline
 
+## Dependências opcionais (animações)
+
+Se desejar usar a biblioteca Moti (recomendada para animações mais ricas), instale as dependências abaixo. Moti baseia-se em `react-native-reanimated` (v2+).
+
+1. Instale `react-native-reanimated` e `moti`:
+
+```bash
+# usando npm
+npm install react-native-reanimated moti
+
+# ou usando yarn
+yarn add react-native-reanimated moti
+```
+
+2. Siga as instruções de configuração do `react-native-reanimated` (adicione o plugin Babel e, se necessário, habilite o reanimated no MainApplication / gradle conforme a doc oficial).
+
+Observação: o projeto já inclui animações simples usando a API `Animated` do React Native como fallback — a instalação é opcional.
+
+## 🎬 Gravação do vídeo demonstrativo (até 5 min)
+
+Dicas para gravar um bom demo do aplicativo:
+
+- Mostre a tela inicial e a navegação entre telas (Home → Lista → Editar → Sobre).
+- Demonstre as animações de entrada dos itens na lista (Lista de Motos) e a transição entre telas.
+- Mostre o fluxo de cadastro, edição e exclusão de uma moto (inclua a notificação local aparecer, se possível).
+- Mostre as configurações de idioma (Português ↔ Espanhol) para demonstrar a internacionalização.
+- Abra a tela Sobre para exibir versão e commit hash.
+- Duração sugerida: 2–4 minutos. Priorize clareza e fluxo natural.
+
+Ferramentas de gravação recomendadas:
+
+- Android: use "Gravar tela" do Android Studio (ou aplicativo de gravação no dispositivo).
+- iOS: use QuickTime no macOS (se aplicável) ou a funcionalidade de gravação do dispositivo.
+- Alternativa rápida: use o Expo Go e um gravador de tela no desktop/celular.
+
 ## ✍️ Autores
 
 - Guilherme Jardim (RM556814) Github: https://github.com/gjardas
