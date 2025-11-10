@@ -1,0 +1,39 @@
+{
+  "cli": {
+    "version": ">= 16.26.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true,
+      "channel": "production",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "resourceClass": "large"
+      },
+      "autoSubmit": {
+        "defaultPlatform": "android",
+        "android": {
+          "serviceAccountKeyPath": "./firebase-service-account.json",
+          "appDistribution": {
+            "releaseNotes": "Versão de entrega final para a 4ª Sprint. Contém CRUD de Motos, Temas, i18n e Animações Moti.",
+
+            "testerGroups": ["professores", "testers-mottu"],
+            "serviceCredentialsPath": "./firebase-service-account.json"
+          }
+        }
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
