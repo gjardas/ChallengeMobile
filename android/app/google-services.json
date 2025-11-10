@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "913138282684",
+    "firebase_url": "https://mottu-e25a9-default-rtdb.firebaseio.com",
+    "project_id": "mottu-e25a9",
+    "storage_bucket": "mottu-e25a9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913138282684:android:e42bdf7535e573d761e0b9",
+        "android_client_info": {
+          "package_name": "com.mottu.mobilechallenge"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkU4g6jOINnagbl2CeibMlo_Qi2i7SaaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

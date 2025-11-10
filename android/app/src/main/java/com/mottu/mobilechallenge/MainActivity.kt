@@ -1,4 +1,4 @@
-package com.gjardas.MobileChallenge
+package com.mottu.mobilechallenge
 
 import android.os.Build
 import android.os.Bundle

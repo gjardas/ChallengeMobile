@@ -15,7 +15,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mottu.mobilechallenge",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +28,8 @@
       "edgeToEdgeEnabled": true,
       "package": "com.mottu.mobilechallenge",
       "googleServicesFile": "./google-services.json",
-      "useNextNotificationsApi": true
+      "useNextNotificationsApi": true,
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -47,6 +51,9 @@
       },
       "commitHash": "8d5effa"
     },
-    "owner": "gjardas"
+    "owner": "gjardas",
+    "updates": {
+      "url": "https://u.expo.dev/4f3d6215-a671-4093-87e4-24a3cc254436"
+    }
   }
 }
